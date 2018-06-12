@@ -29,6 +29,7 @@ import ch.fhnw.lernstickwelcome.fxmlcontroller.ProgressController;
 import ch.fhnw.lernstickwelcome.fxmlcontroller.exam.FirewallDependenciesWarningController;
 import ch.fhnw.lernstickwelcome.fxmlcontroller.exam.FirewallPatternValidatorController;
 import ch.fhnw.lernstickwelcome.fxmlcontroller.standard.NonFreeSoftwareController;
+import ch.fhnw.lernstickwelcome.fxmlcontroller.standard.SecuritySettingsController;
 import ch.fhnw.lernstickwelcome.model.WelcomeConstants;
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -85,6 +86,7 @@ public final class FXMLGuiLoader {
     private NonFreeSoftwareController nonFreeSoftwareController;
     private FirewallPatternValidatorController firewallPatternValidatorController;
     private FirewallDependenciesWarningController firewallDependenciesWarningController;
+    private SecuritySettingsController securitySettingsController;
 
     /**
      * This class loads the FXML files, creates the menu and saves the fxml
@@ -125,6 +127,11 @@ public final class FXMLGuiLoader {
                         "Additional_Software",
                         "list-add.png", menuPaneItems, rb
                 );
+
+                securitySettingsController = loadMenuItemView(
+                        "/ch/fhnw/lernstickwelcome/view/standard/securitySettings.fxml",
+                        "Security_Settings",
+                        "black-lock_1.png", menuPaneItems, rb);
 
                 systemStdController = loadMenuItemView(
                         "/ch/fhnw/lernstickwelcome/view/standard/system.fxml",
@@ -408,6 +415,15 @@ public final class FXMLGuiLoader {
      */
     public AdditionalSoftwareController getAddSoftwareController() {
         return additionalSoftwareController;
+    }
+    
+       /**
+     * Returns the Controller for this fxml view.
+     *
+     * @return
+     */
+    public SecuritySettingsController getSecuritySettingsController() {
+        return securitySettingsController;
     }
 
     /**
