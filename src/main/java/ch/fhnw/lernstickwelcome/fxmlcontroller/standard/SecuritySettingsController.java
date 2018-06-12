@@ -26,14 +26,17 @@ public class SecuritySettingsController implements Initializable{
     
    final ToggleGroup personalPhassphrasesGroup = new ToggleGroup();
    
+   
    @FXML
-   private RadioButton noPassPhrase= new RadioButton();
+   private RadioButton noPassPhraseRadio= new RadioButton();
    
-   
-   private RadioButton yesPassPhrase = new RadioButton();
+   @FXML
+   private RadioButton yesPassPhraseRadio = new RadioButton();
       
+   @FXML
    private PasswordField passPhraseField = new PasswordField();
-   
+     
+   @FXML
    private PasswordField passPhraseFieldRepeat = new PasswordField();
 
 
@@ -48,7 +51,9 @@ public class SecuritySettingsController implements Initializable{
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        passPhraseField.setPromptText("blubber");
+        passPhraseField.setPromptText("Personal Passphrase...");
+         passPhraseFieldRepeat.setPromptText("Repeated Personal Passphrase");
+
     }
     
     
