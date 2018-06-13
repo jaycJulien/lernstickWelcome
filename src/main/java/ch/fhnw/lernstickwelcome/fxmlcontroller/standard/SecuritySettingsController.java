@@ -88,6 +88,9 @@ public class SecuritySettingsController implements Initializable{
             currentPassphraseString = currentPassphraseField.getText();
             
             
+            
+
+            
                      
     }
     
