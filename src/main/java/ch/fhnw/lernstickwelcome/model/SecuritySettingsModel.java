@@ -110,7 +110,7 @@ public class SecuritySettingsModel {
                     return script;
                 }
     
-    
+    //test if the username is really stored for github
     
     
     
