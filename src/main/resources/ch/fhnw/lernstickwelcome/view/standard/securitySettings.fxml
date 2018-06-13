@@ -18,10 +18,12 @@
                   <ToggleGroup fx:id="personalPassPhrasesGroup" />
                </toggleGroup></RadioButton>
             <RadioButton id="setPassphrase" fx:id="yesPassPhraseRadio" alignment="TOP_LEFT" mnemonicParsing="false" text="Set Passphrase" toggleGroup="$personalPassPhrasesGroup" />
+            <Label text="Current Passphrase" />
+            <PasswordField id="current" fx:id="currentPassphraseField" promptText="Current Paaphrase" />
             <Label text="Passphrase" />
-            <PasswordField fx:id="passPhraseField" />
+            <PasswordField fx:id="passPhraseField" promptText="New Passphrase" />
             <Label text="Repeat Passphrase" />
-            <PasswordField fx:id="passPhraseFieldRepeat" />
+            <PasswordField fx:id="passPhraseFieldRepeat" promptText="Repeated new Passphrase" />
          </children>
       </VBox>
       <VBox layoutX="335.0" layoutY="53.0" prefHeight="200.0" prefWidth="200.0">

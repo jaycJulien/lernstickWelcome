@@ -15,6 +15,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import ch.fhnw.lernstickwelcome.model.SecuritySettingsModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.freedesktop.dbus.exceptions.DBusException;
 
 /**
  *
@@ -25,6 +29,7 @@ public class SecuritySettingsController implements Initializable{
     //FXMLLoader loader = new FXMLLoader(lernstickWel)
     
    final ToggleGroup personalPhassphrasesGroup = new ToggleGroup();
+    SecuritySettingsModel securitySettingsModel = new SecuritySettingsModel();
    
    
    @FXML
@@ -38,8 +43,16 @@ public class SecuritySettingsController implements Initializable{
      
    @FXML
    private PasswordField passPhraseFieldRepeat = new PasswordField();
+   
+   @FXML
+   private PasswordField currentPassphraseField = new PasswordField();
 
 
+   public String passphraseString = "";
+   public String passphraseRepeatedString = "";
+   public String currentPassphraseString = "";
+
+   String globallyKnownPassword = "default";
    
    
    
@@ -51,10 +64,24 @@ public class SecuritySettingsController implements Initializable{
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        passPhraseField.setPromptText("Personal Passphrase...");
-         passPhraseFieldRepeat.setPromptText("Repeated Personal Passphrase");
+       try {
+           SecuritySettingsModel.getPartitionName();
+       } catch (DBusException ex) {
+           Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
+       }
 
     }
     
+    public void getCredentials(){
+        
+        if (yesPassPhraseRadio.isSelected()) {
+            passphraseString = passPhraseField.getText();
+            passphraseRepeatedString = passPhraseFieldRepeat.getText();
+            currentPassphraseString = currentPassphraseField.getText();
+            
+            
+                     
+    }
     
+    }
 }
