@@ -73,7 +73,8 @@ public class SecuritySettingsController implements Initializable{
        
        try {
            securitySettingsModel.executeDeleteMasterPassphraseScript();
-           securitySettingsModel.executeDeletePersonalPassphraseScript("hello","julien");
+           //securitySettingsModel.executeDeletePersonalPassphraseScript("julien","hello");
+            securitySettingsModel.executeChangePersonalPassphraseScript("julien","hello");
        } catch (IOException ex) {
            Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
        }

@@ -130,7 +130,8 @@ public class SecuritySettingsModel {
         String script = "#!/bin/sh" + '\n'
                 + "printf \"" + newPassphrase
                 + "\" | printf \"" + currentPassphrase
-                + "\" | cryptsetup luksChangeKey /dev/" + partitonName + " -q";
+                + "\" | cryptsetup luksChangeKey /dev/sdb3 -q";
+               // + "\" | cryptsetup luksChangeKey /dev/" + partitonName + " -q";
 
         return script;
     }
