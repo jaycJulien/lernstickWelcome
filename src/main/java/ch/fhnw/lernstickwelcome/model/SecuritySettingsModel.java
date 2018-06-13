@@ -24,7 +24,7 @@ public class SecuritySettingsModel {
     private static Partition dataPartition;
     int slotForMaster = 1;
     int slotForInitialOrPersonal = 0;
-    String partitonName = ""; //sda3
+    static String partitonName = ""; //sda3
 
 
     
@@ -88,8 +88,27 @@ public class SecuritySettingsModel {
                     return script;
                 }
     /**
+     * The shell to delete the personal passphrase
+     */
+    public String createDeletePersonalKeyScript(String currentPassphrase, String newPassphrase){
+                   String script = "#!/bin/sh" + '\n'
+                             + "printf default \""
+                            + "\" | printf \""+currentPassphrase
+                             + "\" | cryptsetup luksChangeKey /dev/"+partitonName+" -q";
+                    
+                    return script;
+                }
+    
+    /**
      * The shell to delete the master passphrase
      */
+        public String deleteMasterKeyScript(String currentPassphrase){
+                    String script = "#!/bin/sh" + '\n'
+                            + "\" printf \""+currentPassphrase
+                             + "\" | cryptsetup luksKill /dev/"+partitonName+" -q "+slotForMaster;
+                    
+                    return script;
+                }
     
     
     
