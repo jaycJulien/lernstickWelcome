@@ -16,6 +16,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import ch.fhnw.lernstickwelcome.model.SecuritySettingsModel;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.freedesktop.dbus.exceptions.DBusException;
@@ -65,8 +66,15 @@ public class SecuritySettingsController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle rb) {
        try {
-           SecuritySettingsModel.getPartitionName();
-       } catch (DBusException ex) {
+           securitySettingsModel.getPartitionName();
+       }  catch (DBusException ex) {
+           Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       
+       try {
+           securitySettingsModel.executeDeleteMasterPassphraseScript();
+           securitySettingsModel.executeDeletePersonalPassphraseScript("hello","julien");
+       } catch (IOException ex) {
            Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
        }
 
