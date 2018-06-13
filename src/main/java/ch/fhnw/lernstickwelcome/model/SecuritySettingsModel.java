@@ -111,6 +111,7 @@ public class SecuritySettingsModel {
                 }
     
     //test if the username is really stored for github
+        //confirm it is working
     
     
     
