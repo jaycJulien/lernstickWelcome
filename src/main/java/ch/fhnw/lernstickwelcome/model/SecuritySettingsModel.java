@@ -104,8 +104,7 @@ public class SecuritySettingsModel {
      */
         public String deleteMasterKeyScript(String currentPassphrase){
                     String script = "#!/bin/sh" + '\n'
-                            + "\" printf \""+currentPassphrase
-                             + "\" | cryptsetup luksKill /dev/"+partitonName+" -q "+slotForMaster;
+                             + "cryptsetup luksKillSlot /dev/"+partitonName+" -q "+slotForMaster;
                     
                     return script;
                 }
