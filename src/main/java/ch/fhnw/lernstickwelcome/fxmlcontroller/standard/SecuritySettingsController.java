@@ -16,9 +16,16 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import ch.fhnw.lernstickwelcome.model.SecuritySettingsModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventType;
+import javafx.scene.control.Toggle;
+import javafx.scene.layout.VBox;
 import org.freedesktop.dbus.exceptions.DBusException;
 
 /**
@@ -47,7 +54,18 @@ public class SecuritySettingsController implements Initializable{
    
    @FXML
    private PasswordField currentPassphraseField = new PasswordField();
+   
 
+   @FXML
+   private PasswordField passWordFieldMaster = new PasswordField();
+   
+   @FXML
+   VBox personalPassPhraseBox = new VBox();
+   
+   @FXML
+   VBox masterPassPhraseBox = new VBox();
+   
+   
 
    public String passphraseString = "";
    public String passphraseRepeatedString = "";
@@ -65,12 +83,21 @@ public class SecuritySettingsController implements Initializable{
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        //set spacing between the VBOX elements
+        personalPassPhraseBox.setSpacing(10);
+        masterPassPhraseBox.setSpacing(10);
+        
+        
+        addValueChangedListeners();
        try {
            securitySettingsModel.executeDeleteMasterPassphraseScript();
            //securitySettingsModel.executeDeletePersonalPassphraseScript("julien","hello");
            //securitySettingsModel.executeChangePersonalPassphraseScript("waleed","julien");
 
     }  catch (IOException ex) {
+           Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
+       } catch (InterruptedException ex) {
            Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
        }
        } 
@@ -79,9 +106,21 @@ public class SecuritySettingsController implements Initializable{
         if (yesPassPhraseRadio.isSelected()) {
             passphraseString = passPhraseField.getText();
             passphraseRepeatedString = passPhraseFieldRepeat.getText();
-            currentPassphraseString = currentPassphraseField.getText();
-                  
+            currentPassphraseString = currentPassphraseField.getText();                
+    }
     }
     
+     public void addValueChangedListeners() {
+    
+        personalPhassphrasesGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                System.err.println("blubber"+newValue);
+            }
+            
+        }
+        );
+        
+        
     }
 }

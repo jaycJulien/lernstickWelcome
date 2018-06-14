@@ -10,26 +10,28 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.fhnw.lernstickwelcome.fxmlcontroller.standard.SecuritySettingsController">
    <children>
-      <VBox layoutX="51.0" layoutY="53.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="309.0" prefWidth="200.0">
+      <VBox fx:id="personalPassPhraseBox" layoutX="51.0" layoutY="53.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="309.0" prefWidth="200.0">
          <children>
-            <Label text="Personal Passphrase" />
+            <Label fx:id="personalPassphraseVbox" text="Personal Passphrase" />
             <RadioButton fx:id="noPassPhraseRadio" alignment="TOP_LEFT" minWidth="-Infinity" mnemonicParsing="false" text="No Passphrase">
                <toggleGroup>
                   <ToggleGroup fx:id="personalPassPhrasesGroup" />
                </toggleGroup></RadioButton>
             <RadioButton id="setPassphrase" fx:id="yesPassPhraseRadio" alignment="TOP_LEFT" mnemonicParsing="false" text="Set Passphrase" toggleGroup="$personalPassPhrasesGroup" />
             <Label text="Current Passphrase" />
-            <PasswordField id="current" fx:id="currentPassphraseField" promptText="Current Paaphrase" />
+            <PasswordField id="current" fx:id="currentPassphraseField" promptText="Current Passphrase" />
             <Label text="Passphrase" />
             <PasswordField fx:id="passPhraseField" promptText="New Passphrase" />
             <Label text="Repeat Passphrase" />
             <PasswordField fx:id="passPhraseFieldRepeat" promptText="Repeated new Passphrase" />
          </children>
       </VBox>
-      <VBox layoutX="335.0" layoutY="53.0" prefHeight="200.0" prefWidth="200.0">
+      <VBox fx:id="masterPassPhraseBox" layoutX="335.0" layoutY="53.0" prefHeight="200.0" prefWidth="200.0">
          <children>
             <Label text="Master Passphrase" />
-            <Button minHeight="-Infinity" mnemonicParsing="false" text="Delete Master Passphrase" />
+            <Button fx:id="masterPassphraseBox" minHeight="-Infinity" mnemonicParsing="false" text="Delete Master Passphrase" />
+            <Label text="Current Passhprase" />
+            <PasswordField fx:id="passWordFieldMaster" promptText="current Passphrase" />
          </children>
       </VBox>
    </children>
