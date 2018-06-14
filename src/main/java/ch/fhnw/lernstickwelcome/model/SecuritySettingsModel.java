@@ -94,10 +94,13 @@ public class SecuritySettingsModel {
      * @param newPassphrase
      * @throws java.io.IOException
      */
-    public void executeDeletePersonalPassphraseScript(String currentPassphrase, String newPassphrase) throws IOException {
+    public void executeDeletePersonalPassphraseScript(String currentPassphrase) throws IOException {
 
         String deletePersonalPassphraseScript = "";
         deletePersonalPassphraseScript = createDeletePersonalKeyScript(currentPassphrase);
+
+        System.err.println(deletePersonalPassphraseScript);
+                PROCESS_EXECUTOR.executeScript(deletePersonalPassphraseScript);
 
         //PROCESS_EXECUTOR.executeScript(deletePersonalPassphraseScript);
     }
@@ -112,7 +115,6 @@ public class SecuritySettingsModel {
     public void executeChangePersonalPassphraseScript(String currentPassphrase, String newPassphrase) throws IOException {
         System.err.println("i am before");
 
-      
         String changePassphraseScript = createChangeKeyScript(currentPassphrase, newPassphrase);
 
         PROCESS_EXECUTOR.executeScript(changePassphraseScript);
@@ -142,7 +144,7 @@ public class SecuritySettingsModel {
     public String createChangeKeyScript(String currentPassphrase, String newPassphrase) {
         String script = "#!/bin/sh" + '\n'
                 + "printf \"" + currentPassphrase+"\\n"+newPassphrase
-                + "\" | sudo cryptsetup luksChangeKey /dev/sdb3";
+                + "\" | sudo cryptsetup luksChangeKey -q -S /dev/sdb3 0";
                // + "\" | cryptsetup luksChangeKey /dev/" + partitonName + " -q";
 
         return script;
@@ -157,9 +159,9 @@ public class SecuritySettingsModel {
      */
     public String createDeletePersonalKeyScript(String currentPassphrase) {
         String script = "#!/bin/sh" + '\n'
-                + "printf \"default"
-                + "\" | printf \"" + currentPassphrase
-                + "\" | cryptsetup luksChangeKey -q /dev/" + partitonName;
+               + "printf \"" + currentPassphrase+"\\ndefault\n"
+                + "\" | sudo cryptsetup luksChangeKey /dev/sdb3 -S 0";
+               // + "\" | cryptsetup luksChangeKey -q /dev/" + partitonName;
 
         return script;
     }
