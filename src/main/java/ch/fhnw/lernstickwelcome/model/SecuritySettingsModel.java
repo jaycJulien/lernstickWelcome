@@ -68,17 +68,23 @@ public class SecuritySettingsModel {
      * @throws java.io.IOException
      */
 
-    public void executeDeleteMasterPassphraseScript() throws IOException {
+    public void executeDeleteMasterPassphraseScript() throws IOException, InterruptedException  {
 
-        String deleteMasterPassphraseScript = "";
-        try {
-            deleteMasterPassphraseScript = createDeleteMasterKeyScript();
-        } catch (DBusException ex) {
-            Logger.getLogger(SecuritySettingsModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        PROCESS_EXECUTOR.executeScript(deleteMasterPassphraseScript);
-
-        System.err.println("deletemasterScript " + deleteMasterPassphraseScript);
+        
+            String deleteMasterPassphraseScript = createDeleteMasterKeyScript();
+        //Process myProcess = Runtime.getRuntime().exec("sudo cryptsetup luksKillSlot -q /dev/sdb3  1");
+        //PROCESS_EXECUTOR.executeScript(deleteMasterPassphraseScript);
+            //Runtime.getRuntime().exec("sudo cryptsetup luksKillSlot -q /dev/sdb3  1");
+            ProcessBuilder pb = new ProcessBuilder("src/main/java/ch/fhnw/lernstickwelcome/model/testFile.sh","waleed");
+            Process p = pb.start();
+             //int exitValue = PROCESS_EXECUTOR.executeProcess("sudo", "cryptsetup","luksKillSlot","-q","/dev/sdb3","1");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+             String line = null;
+             while ((line = reader.readLine()) != null)
+             {
+                System.out.println(line);
+             }        
+             System.err.println("deletemasterScript " + deleteMasterPassphraseScript);
     }
 
     /**
@@ -123,24 +129,9 @@ public class SecuritySettingsModel {
         }
             */
     }
-    
-    public static void executeScript(String script) {
-    try {
-        ProcessBuilder pb = new ProcessBuilder(script);
-        Process p = pb.start(); // Start the process.
-        p.waitFor(); // Wait for the process to finish.
-        System.out.println("Script executed successfully");
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
 
-    /**
-     * this method deleted the master pass phrase
-     */
-    /**
-     * this method sets the globally Known pass phrase "default"
-     */
+
+    
     /**
      * The shell to change key
      *
@@ -179,10 +170,10 @@ public class SecuritySettingsModel {
      * @return
      * @throws org.freedesktop.dbus.exceptions.DBusException
      */
-    public String createDeleteMasterKeyScript() throws DBusException {
-        getPartitionName();
+    public String createDeleteMasterKeyScript() {
+        //getPartitionName();
         String script = "#!/bin/sh" + '\n'
-                + "cryptsetup luksKillSlot /dev/" + partitonName + " -q " + slotForMaster;
+                + "sudo cryptsetup luksKillSlot -q /dev/sdb3  1";
               //  + "cryptsetup luksKillSlot /dev/" + partitonName + " -q " + slotForMaster;
 
         return script;

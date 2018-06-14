@@ -66,10 +66,9 @@ public class SecuritySettingsController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle rb) {
        try {
-           //securitySettingsModel.executeDeleteMasterPassphraseScript();
+           securitySettingsModel.executeDeleteMasterPassphraseScript();
            //securitySettingsModel.executeDeletePersonalPassphraseScript("julien","hello");
-           securitySettingsModel.executeChangePersonalPassphraseScript("waleed","julien");
-
+           //securitySettingsModel.executeChangePersonalPassphraseScript("waleed","julien");
 
     }  catch (IOException ex) {
            Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
