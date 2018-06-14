@@ -65,24 +65,23 @@ public class SecuritySettingsController implements Initializable{
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //securitySettingsModel.executeDeleteMasterPassphraseScript();
-        //securitySettingsModel.executeDeletePersonalPassphraseScript("julien","hello");
-        securitySettingsModel.executeChangePersonalPassphraseScript("waleed","julien");
+       try {
+           //securitySettingsModel.executeDeleteMasterPassphraseScript();
+           //securitySettingsModel.executeDeletePersonalPassphraseScript("julien","hello");
+           securitySettingsModel.executeChangePersonalPassphraseScript("waleed","julien");
 
-    }
-    
+
+    }  catch (IOException ex) {
+           Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       } 
     public void getCredentials(){
         
         if (yesPassPhraseRadio.isSelected()) {
             passphraseString = passPhraseField.getText();
             passphraseRepeatedString = passPhraseFieldRepeat.getText();
             currentPassphraseString = currentPassphraseField.getText();
-            
-            
-            
-
-            
-                     
+                  
     }
     
     }

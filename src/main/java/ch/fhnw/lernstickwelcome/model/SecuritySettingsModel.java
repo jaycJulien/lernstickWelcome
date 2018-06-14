@@ -11,6 +11,7 @@ import ch.fhnw.util.StorageDevice;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -102,46 +103,16 @@ public class SecuritySettingsModel {
      * @param newPassphrase
      * @throws java.io.IOException
      */
-    public void executeChangePersonalPassphraseScript(String currentPassphrase, String newPassphrase)  {
+    public void executeChangePersonalPassphraseScript(String currentPassphrase, String newPassphrase) throws IOException {
         System.err.println("i am before");
 
-        
-        System.err.println("******* the current passphrase"+newPassphrase);
-        String changePassphraseScript = "";
-        changePassphraseScript = createChangeKeyScript(currentPassphrase, newPassphrase);
-        System.err.println("///////////////////");
-        System.err.println(changePassphraseScript);
+      
+        String changePassphraseScript = createChangeKeyScript(currentPassphrase, newPassphrase);
 
-        //int exitValue = PROCESS_EXECUTOR.executeScript(changePassphraseScript);
+        PROCESS_EXECUTOR.executeScript(changePassphraseScript);
         
-        //Process p = Runtime.getRuntime().exec("printf \"waleed\njulien\" | cryptsetup luksChangeKey -q /dev/sdb3");
-
-        //PROCESS_EXECUTOR.executeScript(changePassphraseScript);
-        //Runtime.getRuntime().exec("testFile.sh");
-        //Process p = Runtime.getRuntime().exec("printf \"waleed\njulien\" | cryptsetup luksChangeKey -q /dev/sdb3 ");
-        //p.waitFor();
-
-        /*ProcessBuilder pb = new ProcessBuilder("/bin/sh", "-c", "src/main/java/ch/fhnw/lernstickwelcome/model/testFile.sh"); 
-        Process p = pb.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String line = null;
-        while ((line = reader.readLine()) != null)
-        {
-           System.out.println(line);
-        }*/
-        
-        /*String[] cmd = {
-        "/bin/sh",
-        "-c",
-        "printf \"waleed\njulien\" | cryptsetup luksChangeKey -q /dev/sdb3"
-        };
-
-        Process p = Runtime.getRuntime().exec(cmd);*/
-        
-        //Process proc = Runtime.getRuntime().exec(new String[]{"sh","-c","printf \"waleed\njulien\" | cryptsetup luksChangeKey -q /dev/sdb3"});
-        //proc.waitFor();
-        
-        executeScript("src/main/java/ch/fhnw/lernstickwelcome/model/testFile.sh");
+       // executeScript("src/main/java/ch/fhnw/lernstickwelcome/model/testFile.sh");
+ 
         
         System.err.println("i am after");
         /*
@@ -180,7 +151,7 @@ public class SecuritySettingsModel {
     public String createChangeKeyScript(String currentPassphrase, String newPassphrase) {
         String script = "#!/bin/sh" + '\n'
                 + "printf \"" + currentPassphrase+"\\n"+newPassphrase
-                + "\" | cryptsetup luksChangeKey /dev/sdb3";
+                + "\" | sudo cryptsetup luksChangeKey /dev/sdb3";
                // + "\" | cryptsetup luksChangeKey /dev/" + partitonName + " -q";
 
         return script;
