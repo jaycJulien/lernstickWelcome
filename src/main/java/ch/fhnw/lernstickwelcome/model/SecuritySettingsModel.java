@@ -8,12 +8,15 @@ package ch.fhnw.lernstickwelcome.model;
 import ch.fhnw.util.Partition;
 import ch.fhnw.util.ProcessExecutor;
 import ch.fhnw.util.StorageDevice;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.freedesktop.dbus.exceptions.DBusException;
+import sun.tools.jar.CommandLine;
 
 /**
  *
@@ -99,19 +102,67 @@ public class SecuritySettingsModel {
      * @param newPassphrase
      * @throws java.io.IOException
      */
-    public void executeChangePersonalPassphraseScript(String currentPassphrase, String newPassphrase) throws IOException {
+    public void executeChangePersonalPassphraseScript(String currentPassphrase, String newPassphrase)  {
+        System.err.println("i am before");
 
+        
+        System.err.println("******* the current passphrase"+newPassphrase);
         String changePassphraseScript = "";
         changePassphraseScript = createChangeKeyScript(currentPassphrase, newPassphrase);
-        int exitValue = PROCESS_EXECUTOR.executeScript(changePassphraseScript);
+        System.err.println("///////////////////");
+        System.err.println(changePassphraseScript);
 
+        //int exitValue = PROCESS_EXECUTOR.executeScript(changePassphraseScript);
+        
+        //Process p = Runtime.getRuntime().exec("printf \"waleed\njulien\" | cryptsetup luksChangeKey -q /dev/sdb3");
+
+        //PROCESS_EXECUTOR.executeScript(changePassphraseScript);
+        //Runtime.getRuntime().exec("testFile.sh");
+        //Process p = Runtime.getRuntime().exec("printf \"waleed\njulien\" | cryptsetup luksChangeKey -q /dev/sdb3 ");
+        //p.waitFor();
+
+        /*ProcessBuilder pb = new ProcessBuilder("/bin/sh", "-c", "src/main/java/ch/fhnw/lernstickwelcome/model/testFile.sh"); 
+        Process p = pb.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String line = null;
+        while ((line = reader.readLine()) != null)
+        {
+           System.out.println(line);
+        }*/
+        
+        /*String[] cmd = {
+        "/bin/sh",
+        "-c",
+        "printf \"waleed\njulien\" | cryptsetup luksChangeKey -q /dev/sdb3"
+        };
+
+        Process p = Runtime.getRuntime().exec(cmd);*/
+        
+        //Process proc = Runtime.getRuntime().exec(new String[]{"sh","-c","printf \"waleed\njulien\" | cryptsetup luksChangeKey -q /dev/sdb3"});
+        //proc.waitFor();
+        
+        executeScript("src/main/java/ch/fhnw/lernstickwelcome/model/testFile.sh");
+        
+        System.err.println("i am after");
+        /*
         if(exitValue != 0){
             System.err.println("*******************************nicht gegangen!!");
         } else {
             System.err.println("es ist gegangen exitValue "+ exitValue);
         }
-
+            */
     }
+    
+    public static void executeScript(String script) {
+    try {
+        ProcessBuilder pb = new ProcessBuilder(script);
+        Process p = pb.start(); // Start the process.
+        p.waitFor(); // Wait for the process to finish.
+        System.out.println("Script executed successfully");
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 
     /**
      * this method deleted the master pass phrase
@@ -128,9 +179,8 @@ public class SecuritySettingsModel {
      */
     public String createChangeKeyScript(String currentPassphrase, String newPassphrase) {
         String script = "#!/bin/sh" + '\n'
-                + "printf \"" + newPassphrase
-                + "\" | printf \"" + currentPassphrase
-                + "\" | cryptsetup luksChangeKey /dev/sdb3 -q";
+                + "printf \"" + currentPassphrase+"\\n"+newPassphrase
+                + "\" | cryptsetup luksChangeKey /dev/sdb3";
                // + "\" | cryptsetup luksChangeKey /dev/" + partitonName + " -q";
 
         return script;
@@ -162,6 +212,7 @@ public class SecuritySettingsModel {
         getPartitionName();
         String script = "#!/bin/sh" + '\n'
                 + "cryptsetup luksKillSlot /dev/" + partitonName + " -q " + slotForMaster;
+              //  + "cryptsetup luksKillSlot /dev/" + partitonName + " -q " + slotForMaster;
 
         return script;
     }
