@@ -68,14 +68,14 @@ public class SecuritySettingsModel {
      * @throws java.io.IOException
      */
 
-    public void executeDeleteMasterPassphraseScript() throws IOException, InterruptedException  {
+    public void executeDeleteMasterPassphraseScript(String currentPassphrase) throws IOException, InterruptedException  {
 
         
             String deleteMasterPassphraseScript = createDeleteMasterKeyScript();
         //Process myProcess = Runtime.getRuntime().exec("sudo cryptsetup luksKillSlot -q /dev/sdb3  1");
         //PROCESS_EXECUTOR.executeScript(deleteMasterPassphraseScript);
             //Runtime.getRuntime().exec("sudo cryptsetup luksKillSlot -q /dev/sdb3  1");
-            ProcessBuilder pb = new ProcessBuilder("src/main/java/ch/fhnw/lernstickwelcome/model/testFile.sh","waleed");
+            ProcessBuilder pb = new ProcessBuilder("src/main/java/ch/fhnw/lernstickwelcome/model/testFile.sh",currentPassphrase);
             Process p = pb.start();
              //int exitValue = PROCESS_EXECUTOR.executeProcess("sudo", "cryptsetup","luksKillSlot","-q","/dev/sdb3","1");
              BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -100,7 +100,7 @@ public class SecuritySettingsModel {
         deletePersonalPassphraseScript = createDeletePersonalKeyScript(currentPassphrase);
 
         System.err.println(deletePersonalPassphraseScript);
-                PROCESS_EXECUTOR.executeScript(deletePersonalPassphraseScript);
+        PROCESS_EXECUTOR.executeScript(deletePersonalPassphraseScript);
 
         //PROCESS_EXECUTOR.executeScript(deletePersonalPassphraseScript);
     }
@@ -144,7 +144,8 @@ public class SecuritySettingsModel {
     public String createChangeKeyScript(String currentPassphrase, String newPassphrase) {
         String script = "#!/bin/sh" + '\n'
                 + "printf \"" + currentPassphrase+"\\n"+newPassphrase
-                + "\" | sudo cryptsetup luksChangeKey -q -S /dev/sdb3 0";
+                + "\" | sudo cryptsetup luksChangeKey /dev/sdb3 -q -S 0";
+        System.err.println("script is "+script);
                // + "\" | cryptsetup luksChangeKey /dev/" + partitonName + " -q";
 
         return script;
@@ -163,6 +164,7 @@ public class SecuritySettingsModel {
                 + "\" | sudo cryptsetup luksChangeKey /dev/sdb3 -S 0";
                // + "\" | cryptsetup luksChangeKey -q /dev/" + partitonName;
 
+               System.err.println("the script is "+script);
         return script;
     }
 

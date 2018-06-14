@@ -36,7 +36,11 @@ public class SecuritySettingsController implements Initializable{
     
     //FXMLLoader loader = new FXMLLoader(lernstickWel)
     
-   final ToggleGroup personalPhassphrasesGroup = new ToggleGroup();
+  
+   
+   
+   
+   
     SecuritySettingsModel securitySettingsModel = new SecuritySettingsModel();
    
    
@@ -45,6 +49,9 @@ public class SecuritySettingsController implements Initializable{
    
    @FXML
    private RadioButton yesPassPhraseRadio = new RadioButton();
+   
+    @FXML
+   ToggleGroup personalPassphrasesGroup = new ToggleGroup();
       
    @FXML
    private PasswordField passPhraseField = new PasswordField();
@@ -65,12 +72,15 @@ public class SecuritySettingsController implements Initializable{
    @FXML
    VBox masterPassPhraseBox = new VBox();
    
+   //adding to the ToggleGroup
+   
+   
    
 
    public String passphraseString = "";
    public String passphraseRepeatedString = "";
    public String currentPassphraseString = "";
-
+   public String passWordFieldMasterString = "";
    String globallyKnownPassword = "default";
    
    
@@ -84,22 +94,27 @@ public class SecuritySettingsController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
+        noPassPhraseRadio.setToggleGroup(personalPassphrasesGroup);
+        yesPassPhraseRadio.setToggleGroup(personalPassphrasesGroup);
+        noPassPhraseRadio.setUserData("noPassphrase");
+        yesPassPhraseRadio.setUserData("yesPassphrase");
+
+        
         //set spacing between the VBOX elements
         personalPassPhraseBox.setSpacing(10);
         masterPassPhraseBox.setSpacing(10);
-        
-        
-        addValueChangedListeners();
-       try {
-           securitySettingsModel.executeDeleteMasterPassphraseScript();
+       //getCredentials();
+       addValueChangedListeners();
+       //try {
+          // securitySettingsModel.executeDeleteMasterPassphraseScript();
            //securitySettingsModel.executeDeletePersonalPassphraseScript("julien","hello");
            //securitySettingsModel.executeChangePersonalPassphraseScript("waleed","julien");
 
-    }  catch (IOException ex) {
+   /*}  catch (IOException ex) {
            Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
        } catch (InterruptedException ex) {
            Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
-       }
+       }*/
        } 
     public void getCredentials(){
         
@@ -110,12 +125,54 @@ public class SecuritySettingsController implements Initializable{
     }
     }
     
-     public void addValueChangedListeners() {
     
-        personalPhassphrasesGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+    public void deleteMasterPassPhraseOnClick() throws IOException, InterruptedException {
+        System.out.println("Hello delete");
+        // check if currentPassphrase is default or personal PassPhrase
+   passWordFieldMasterString = passWordFieldMaster.getText(); 
+
+    securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterString);
+
+        //check if the currentPassPhrase input field is empty, 
+        //if itrs empty the use default
+        //if its with something inside, its 
+        
+        //trigger the Method to delete the masterPassphrase
+        
+    }
+    
+     public void addValueChangedListeners() {
+        
+    
+    personalPassphrasesGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>()
+    {
             @Override
-            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-                System.err.println("blubber"+newValue);
+            public void changed(ObservableValue<? extends Toggle> ov, Toggle t, Toggle t1){
+             
+            if (personalPassphrasesGroup.getSelectedToggle() != null) {
+             if(personalPassphrasesGroup.getSelectedToggle().getUserData().toString() == "yesPassphrase"){
+                 try {
+                        passphraseString = passPhraseField.getText();
+                        passphraseRepeatedString = passPhraseFieldRepeat.getText();
+                        currentPassphraseString = currentPassphraseField.getText(); 
+                        securitySettingsModel.executeChangePersonalPassphraseScript(currentPassphraseString,passphraseString);
+                 } catch (IOException ex) {
+                     Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+             }
+             
+             else if(personalPassphrasesGroup.getSelectedToggle().getUserData().toString() == "noPassphrase"){
+              try {
+                    
+                     currentPassphraseString = currentPassphraseField.getText(); 
+                     securitySettingsModel.executeDeletePersonalPassphraseScript(currentPassphraseString);
+                 } catch (IOException ex) {
+                     Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+              }
+             
+            }            
+            
             }
             
         }
@@ -123,4 +180,5 @@ public class SecuritySettingsController implements Initializable{
         
         
     }
+     
 }
