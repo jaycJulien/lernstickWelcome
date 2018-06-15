@@ -232,6 +232,7 @@ public class SecuritySettingsController implements Initializable {
                         passPhraseFieldRepeat.setVisible(true);
                         currentPassphraseField.setVisible(true);
                         
+                        //set the input pass fields to true
                         currentPassLabel.setVisible(true);
                         newPassLabel.setVisible(true);
                         newPassLabelRepeat.setVisible(true);
