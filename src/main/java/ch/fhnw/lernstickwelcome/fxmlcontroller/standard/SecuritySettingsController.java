@@ -61,10 +61,10 @@ public class SecuritySettingsController implements Initializable {
     private Label newPassLabelRepeat = new Label();
     
     @FXML
-    private Label hintPersonal = new Label();
+    private Label hintPersonal = new Label("Enter default if you do not have personal passphrase");
     
     @FXML
-    private Label hintMaster = new Label();
+    private Label hintMaster = new Label("Enter default if you do not have personal passphrase");
 
     @FXML
     private PasswordField passPhraseFieldRepeat = new PasswordField();
@@ -139,6 +139,13 @@ public class SecuritySettingsController implements Initializable {
         newPassLabelRepeat.setVisible(false);
         
         hintPersonal.setVisible(false);
+        
+        hintMaster.setText("Enter default if you do not have personal passphrase");
+        hintPersonal.setText("Enter default if you do not have personal passphrase");
+
+        
+        hintPersonal.setWrapText(true);
+        hintMaster.setWrapText(true);
 
         try {
             checkIfMasterExist();
