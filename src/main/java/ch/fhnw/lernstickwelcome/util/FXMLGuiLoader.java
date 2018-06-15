@@ -128,6 +128,7 @@ public final class FXMLGuiLoader {
                         "list-add.png", menuPaneItems, rb
                 );
 
+                //add the security controller to the panel
                 securitySettingsController = loadMenuItemView(
                         "/ch/fhnw/lernstickwelcome/view/standard/securitySettings.fxml",
                         "Security_Settings",

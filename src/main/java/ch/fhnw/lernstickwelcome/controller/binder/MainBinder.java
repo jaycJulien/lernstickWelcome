@@ -58,44 +58,26 @@ public class MainBinder {
      */
     public void initHandlers(Stage progressDialog) {
         welcomeApplicationStart.getBtSaveButton().setOnAction((ActionEvent evt) -> {
-            
-            System.err.println("the curent View Indexplease"+MainController.currentViewIndex); 
+                        
+            //this if condition checks if the panel in which the save button 
+            //is clicked is the security panel, if not do what you used to do before
             if(MainController.currentViewIndex != 3) {
                         
             controller.startProcessingTasks();
             progressDialog.showAndWait();    
                 
+            //if yes, then go to the SecuritySettingsContoller and execute the
+            //doActionSave method that we created
             } else if (MainController.currentViewIndex == 3) {
                 try {
                     controller.getGuiLoaderInstance().getSecuritySettingsController().doActionOnSave();
                     
-                    /*
-                    
-                    switch(selectedMethod) {
-                    case "NO_PASSWORD":
-                    System.err.println("******I am in NOPASSWORD");
-                    //get the curent passphrase
-                    
-                    //call the model function to change the passphrase
-                    
-                    break;
-                    case "EDIT_PERSONAL_PASSWORD":
-                    System.err.println("*******I AM IN EDITPERSONAL");
-                    break;
-                    default:
-                    throw new IllegalArgumentException("the option selected does not exist");
-                    }
-                    */
+                   
                 } catch (IOException ex) {
                     Logger.getLogger(MainBinder.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            //get the status if its no pw, edit personal or delete mpw
-            //switch case blubber
-            //securitycontroller::getClass.getStatus
-                 //   switch case(status)
-                    //        case : "NO_PW+"
-            //execute this shit
+            
 
         });
         welcomeApplicationStart.getBtFinishButton().setOnAction(evt -> {

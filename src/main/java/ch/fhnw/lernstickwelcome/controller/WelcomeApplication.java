@@ -92,9 +92,10 @@ public final class WelcomeApplication extends Application {
                               
             controller = new WelcomeController();
             
-       
             guiLoader = new FXMLGuiLoader(isExamEnvironment(), controller.getBundle());
-
+            
+            //send the guiLoader to the controller to deal with same instance inside
+            //and not multiple.
             controller.setGuiLoaderInstance(guiLoader);
 
             Stage errorStage = FXMLGuiLoader.createDialog(
