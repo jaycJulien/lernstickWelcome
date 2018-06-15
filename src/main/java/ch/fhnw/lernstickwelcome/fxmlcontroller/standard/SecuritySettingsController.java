@@ -91,6 +91,13 @@ public class SecuritySettingsController implements Initializable {
     String globallyKnownPassword = "default";
     String textInBetween = "";
     public WelcomeController controller;
+    
+    private String selectedMethod = "";
+    
+       private enum SELECTED_TOGGLE {
+        NO_PASSWORD,
+        EDIT_PERSONAL_PASSWORD;
+    }
 
     /**
      * Initializes the controller class.
@@ -208,6 +215,7 @@ public class SecuritySettingsController implements Initializable {
 
                 if (personalPassphrasesGroup.getSelectedToggle() != null) {
                     if (personalPassphrasesGroup.getSelectedToggle().getUserData().toString() == "yesPassphrase") {
+                        setSelectedMethod(SELECTED_TOGGLE.EDIT_PERSONAL_PASSWORD.toString());
                         passPhraseField.setVisible(true);
                         passPhraseFieldRepeat.setVisible(true);
                         currentPassphraseField.setVisible(true);
@@ -223,6 +231,8 @@ public class SecuritySettingsController implements Initializable {
                      Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
                  }*/
                     } else if (personalPassphrasesGroup.getSelectedToggle().getUserData().toString() == "noPassphrase") {
+                        setSelectedMethod(SELECTED_TOGGLE.NO_PASSWORD.toString());
+
                         passPhraseField.setVisible(false);
                         passPhraseFieldRepeat.setVisible(false);
                         currentPassphraseField.setVisible(false);
@@ -246,5 +256,46 @@ public class SecuritySettingsController implements Initializable {
         );
 
     }
+    
+    //Getter and Setter methods for the Strings
 
+    public String getPassphraseString() {
+        return passphraseString;
+    }
+
+    public void setPassphraseString(String passphraseString) {
+        this.passphraseString = passphraseString;
+    }
+
+    public String getPassphraseRepeatedString() {
+        return passphraseRepeatedString;
+    }
+
+    public void setPassphraseRepeatedString(String passphraseRepeatedString) {
+        this.passphraseRepeatedString = passphraseRepeatedString;
+    }
+
+    public String getCurrentPassphraseString() {
+        return currentPassphraseString;
+    }
+
+    public void setCurrentPassphraseString(String currentPassphraseString) {
+        this.currentPassphraseString = currentPassphraseString;
+    }
+
+    public String getPassWordFieldMasterString() {
+        return passWordFieldMasterString;
+    }
+
+    public void setPassWordFieldMasterString(String passWordFieldMasterString) {
+        this.passWordFieldMasterString = passWordFieldMasterString;
+    }
+
+    public String getSelectedMethod() {
+        return selectedMethod;
+    }
+
+    public void setSelectedMethod(String selectedMethod) {
+        this.selectedMethod = selectedMethod;
+    }
 }
