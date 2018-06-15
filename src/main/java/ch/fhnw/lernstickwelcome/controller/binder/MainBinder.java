@@ -19,6 +19,10 @@ package ch.fhnw.lernstickwelcome.controller.binder;
 import ch.fhnw.lernstickwelcome.controller.WelcomeApplication;
 import ch.fhnw.lernstickwelcome.controller.WelcomeController;
 import ch.fhnw.lernstickwelcome.fxmlcontroller.MainController;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -53,7 +57,7 @@ public class MainBinder {
      * clicking on save.
      */
     public void initHandlers(Stage progressDialog) {
-        welcomeApplicationStart.getBtSaveButton().setOnAction(evt -> {
+        welcomeApplicationStart.getBtSaveButton().setOnAction((ActionEvent evt) -> {
             
             System.err.println("the curent View Indexplease"+MainController.currentViewIndex); 
             if(MainController.currentViewIndex != 3) {
@@ -62,19 +66,29 @@ public class MainBinder {
             progressDialog.showAndWait();    
                 
             } else if (MainController.currentViewIndex == 3) {
-                String selectedMethod = controller.getGuiLoaderInstance().getSecuritySettingsController().getSelectedMethod();
-                
-                switch(selectedMethod) {
+                try {
+                    controller.getGuiLoaderInstance().getSecuritySettingsController().doActionOnSave();
+                    
+                    /*
+                    
+                    switch(selectedMethod) {
                     case "NO_PASSWORD":
-                        System.err.println("blubber");
-                        break;
+                    System.err.println("******I am in NOPASSWORD");
+                    //get the curent passphrase
+                    
+                    //call the model function to change the passphrase
+                    
+                    break;
                     case "EDIT_PERSONAL_PASSWORD":
-                        System.err.println("blubber2");
-                        break;
-                        default:
-                            throw new IllegalArgumentException("the option selected does not exist");
+                    System.err.println("*******I AM IN EDITPERSONAL");
+                    break;
+                    default:
+                    throw new IllegalArgumentException("the option selected does not exist");
+                    }
+                    */
+                } catch (IOException ex) {
+                    Logger.getLogger(MainBinder.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.err.println("+++++++selectedMehtod"+ selectedMethod);
             }
             //get the status if its no pw, edit personal or delete mpw
             //switch case blubber

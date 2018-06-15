@@ -24,6 +24,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Toggle;
 import javafx.scene.layout.VBox;
@@ -91,10 +93,10 @@ public class SecuritySettingsController implements Initializable {
     String globallyKnownPassword = "default";
     String textInBetween = "";
     public WelcomeController controller;
-    
+
     private String selectedMethod = "";
-    
-       private enum SELECTED_TOGGLE {
+
+    private enum SELECTED_TOGGLE {
         NO_PASSWORD,
         EDIT_PERSONAL_PASSWORD;
     }
@@ -187,7 +189,6 @@ public class SecuritySettingsController implements Initializable {
             e.printStackTrace();
         }
 
-
         String regexString = Pattern.quote("1: ") + "(.*?)" + Pattern.quote("Key");
         Pattern pattern = Pattern.compile(regexString);
         // text contains the full text that you want to extract data
@@ -207,6 +208,60 @@ public class SecuritySettingsController implements Initializable {
 
     }
 
+    public void doActionOnSave() throws IOException {
+
+        getCredentials();
+        //checkTheInput();
+
+        if (checkTheInput() == true) {
+            switch (selectedMethod) {
+                case "NO_PASSWORD":
+                    securitySettingsModel.executeDeletePersonalPassphraseScript(currentPassphraseString);
+                    break;
+
+                case "EDIT_PERSONAL_PASSWORD":
+                    securitySettingsModel.executeChangePersonalPassphraseScript(currentPassphraseString, passphraseString);
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("the option selected does not exist");
+            }
+        }
+    }
+
+    public boolean checkTheInput() {
+        if (noPassPhraseRadio.isSelected()) {
+            if (currentPassphraseField.getText().isEmpty()) {
+                infoBox("Please enter your current Passphrase", "Passphrase missing");
+                return false;
+            } else if (!currentPassphraseField.getText().isEmpty()) {
+                return true;
+            }
+        } else if (yesPassPhraseRadio.isSelected()) {
+            if (currentPassphraseField.getText().isEmpty()
+                    || passPhraseField.getText().isEmpty()
+                    || passPhraseFieldRepeat.getText().isEmpty()) {
+                infoBox("Please enter the missing Passphrase(s)", "Passphrase(s) missing");
+                return false;
+            } else {
+                if (passPhraseField.getText() != passPhraseFieldRepeat.getText()) {
+                    infoBox("The entered new Passphrases don't match", "Passphrases don't match");
+                    return false;
+                } else if (passPhraseField.getText() == passPhraseFieldRepeat.getText()) {
+                    if (passPhraseField.getText().contains("\\") || passPhraseFieldRepeat.getText().contains("\\")) {
+                        infoBox("Please dont use the Backslash in your passphrase", "Backslash not allowed");
+                        return false;
+                    } else {
+                        return true;
+
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public void addValueChangedListeners() {
 
         personalPassphrasesGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
@@ -224,29 +279,18 @@ public class SecuritySettingsController implements Initializable {
                         currentPassLabel.setVisible(true);
                         newPassLabel.setVisible(true);
                         newPassLabelRepeat.setVisible(true);
-                        /*try {
-                   
-                        //securitySettingsModel.executeChangePersonalPassphraseScript(currentPassphraseString,passphraseString);
-                 } catch (IOException ex) {
-                     Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
-                 }*/
+
                     } else if (personalPassphrasesGroup.getSelectedToggle().getUserData().toString() == "noPassphrase") {
                         setSelectedMethod(SELECTED_TOGGLE.NO_PASSWORD.toString());
 
                         passPhraseField.setVisible(false);
                         passPhraseFieldRepeat.setVisible(false);
-                        currentPassphraseField.setVisible(false);
+                        currentPassphraseField.setVisible(true);
 
-                        currentPassLabel.setVisible(false);
+                        currentPassLabel.setVisible(true);
                         newPassLabel.setVisible(false);
                         newPassLabelRepeat.setVisible(false);
 
-                        /*try {
-                    
-                    // securitySettingsModel.executeDeletePersonalPassphraseScript(currentPassphraseString);
-                 } catch (IOException ex) {
-                     Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
-                 }*/
                     }
 
                 }
@@ -256,9 +300,8 @@ public class SecuritySettingsController implements Initializable {
         );
 
     }
-    
-    //Getter and Setter methods for the Strings
 
+    //Getter and Setter methods for the Strings
     public String getPassphraseString() {
         return passphraseString;
     }
@@ -298,4 +341,19 @@ public class SecuritySettingsController implements Initializable {
     public void setSelectedMethod(String selectedMethod) {
         this.selectedMethod = selectedMethod;
     }
+
+    public static void infoBox(String infoMessage, String titleBar) {
+        /* By specifying a null headerMessage String, we cause the dialog to
+           not have a header */
+        infoBox(infoMessage, titleBar, null);
+    }
+
+    public static void infoBox(String infoMessage, String titleBar, String headerMessage) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(titleBar);
+        alert.setHeaderText(headerMessage);
+        alert.setContentText(infoMessage);
+        alert.showAndWait();
+    }
+
 }
