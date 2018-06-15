@@ -132,7 +132,7 @@ public final class FXMLGuiLoader {
                 securitySettingsController = loadMenuItemView(
                         "/ch/fhnw/lernstickwelcome/view/standard/securitySettings.fxml",
                         "Security_Settings",
-                        "lock-coloured.png", menuPaneItems, rb);
+                        "logo-lock.png", menuPaneItems, rb);
 
                 systemStdController = loadMenuItemView(
                         "/ch/fhnw/lernstickwelcome/view/standard/system.fxml",
