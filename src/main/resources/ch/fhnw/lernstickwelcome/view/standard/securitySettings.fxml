@@ -20,19 +20,21 @@
             <RadioButton id="setPassphrase" fx:id="yesPassPhraseRadio" alignment="TOP_LEFT" mnemonicParsing="false" text="Set Passphrase" toggleGroup="$personalPassPhrasesGroup" />
             <Label fx:id="currentPassLabel" text="Current Passphrase" />
             <PasswordField id="current" fx:id="currentPassphraseField" promptText="Current Passphrase" />
+            <Label fx:id="hintPersonal" prefHeight="16.0" prefWidth="200.0" text="enter &quot;default&quot; if no Personal passphrase" />
             <Label fx:id="newPassLabel" text=" New Passphrase" />
             <PasswordField fx:id="passPhraseField" promptText="New Passphrase" />
             <Label fx:id="newPassLabelRepeat" text="Repeat New Passphrase" />
             <PasswordField fx:id="passPhraseFieldRepeat" promptText="Repeated new Passphrase" />
          </children>
       </VBox>
-      <VBox fx:id="masterPassPhraseBox" layoutX="361.0" layoutY="53.0" prefHeight="200.0" prefWidth="216.0">
+      <VBox fx:id="masterPassPhraseBox" layoutX="297.0" layoutY="53.0" prefHeight="200.0" prefWidth="253.0">
          <children>
             <Label fx:id="masterPassPhraseLabel" text="Master Passphrase" />
             <Label fx:id="deletedMasterPassPhraseLabel" prefHeight="23.0" prefWidth="271.0" text="No Master Passphrase" />
             <Button fx:id="masterPassphraseButton" minHeight="-Infinity" mnemonicParsing="false" onAction="#deleteMasterPassPhraseOnClick" text="Delete Master Passphrase" />
             <Label fx:id="currentPassPhraseMasterLabel" text="Current Passhprase" />
             <PasswordField fx:id="passWordFieldMaster" promptText="current Passphrase" />
+            <Label fx:id="hintMaster" prefHeight="22.0" prefWidth="253.0" text="enter &quot;default&quot; if no Personal passphrase" />
          </children>
       </VBox>
    </children>

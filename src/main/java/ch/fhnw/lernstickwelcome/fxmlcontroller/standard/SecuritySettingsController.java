@@ -59,6 +59,12 @@ public class SecuritySettingsController implements Initializable {
 
     @FXML
     private Label newPassLabelRepeat = new Label();
+    
+    @FXML
+    private Label hintPersonal = new Label();
+    
+    @FXML
+    private Label hintMaster = new Label();
 
     @FXML
     private PasswordField passPhraseFieldRepeat = new PasswordField();
@@ -131,6 +137,8 @@ public class SecuritySettingsController implements Initializable {
         currentPassLabel.setVisible(false);
         newPassLabel.setVisible(false);
         newPassLabelRepeat.setVisible(false);
+        
+        hintPersonal.setVisible(false);
 
         try {
             checkIfMasterExist();
@@ -203,8 +211,11 @@ public class SecuritySettingsController implements Initializable {
     public void deleteMasterPassPhraseOnClick() throws IOException, InterruptedException {
         // check if currentPassphrase is default or personal PassPhrase
         passWordFieldMasterString = passWordFieldMaster.getText();
-
-        securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterString);
+securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterString);
+        //if (securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterString) != 0) {
+          //  System.err.println("The Exit value of delete is "+ );
+            //infoBox("Sorry, the password you entered is not correct, please try again.", "Passphrase is not correct");
+        //}
 
     }
 
@@ -283,6 +294,8 @@ public class SecuritySettingsController implements Initializable {
                         passPhraseField.setVisible(true);
                         passPhraseFieldRepeat.setVisible(true);
                         currentPassphraseField.setVisible(true);
+                        hintPersonal.setVisible(true);
+
 
                         //set the input pass fields to true
                         currentPassLabel.setVisible(true);
@@ -299,6 +312,8 @@ public class SecuritySettingsController implements Initializable {
                         currentPassLabel.setVisible(true);
                         newPassLabel.setVisible(false);
                         newPassLabelRepeat.setVisible(false);
+                                    hintPersonal.setVisible(false);
+
 
                     }
 

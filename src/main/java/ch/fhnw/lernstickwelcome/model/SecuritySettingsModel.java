@@ -71,7 +71,7 @@ public class SecuritySettingsModel {
     public void executeDeleteMasterPassphraseScript(String currentPassphrase) throws IOException, InterruptedException  {
 
         
-            String deleteMasterPassphraseScript = createDeleteMasterKeyScript();
+           String deleteMasterPassphraseScript = createDeleteMasterKeyScript();
         //Process myProcess = Runtime.getRuntime().exec("sudo cryptsetup luksKillSlot -q /dev/sdb3  1");
         //PROCESS_EXECUTOR.executeScript(deleteMasterPassphraseScript);
             //Runtime.getRuntime().exec("sudo cryptsetup luksKillSlot -q /dev/sdb3  1");
@@ -85,6 +85,25 @@ public class SecuritySettingsModel {
                 System.out.println(line);
              }        
              System.err.println("deletemasterScript " + deleteMasterPassphraseScript);
+            
+             /*String script = "#!/bin/bash" + '\n'
+                +"export HISTIGNORE=\"expect*\";"+ '\n'
+                +"expect -c \""+ '\n'
+                +"spawn sudo cryptsetup luksKillSlot /dev/sdb3 1"+ '\n'
+                + "expect \"?assphrase:\""+ '\n'
+                + "send \""+currentPassphrase+"\r\""+ '\n'
+                +  "expect eof\""+ '\n'
+                +"export HISTIGNORE=\"\";";
+             
+             System.err.print("the script is "+script);
+             
+             int exitValue = PROCESS_EXECUTOR.executeScript(script);
+             
+                          System.err.print("the exit moron value is  is "+script);
+
+             
+             return exitValue;*/
+            
     }
 
     /**
