@@ -94,15 +94,15 @@ public class SecuritySettingsModel {
      * @param newPassphrase
      * @throws java.io.IOException
      */
-    public void executeDeletePersonalPassphraseScript(String currentPassphrase) throws IOException {
+    public int executeDeletePersonalPassphraseScript(String currentPassphrase) throws IOException {
 
         String deletePersonalPassphraseScript = "";
         deletePersonalPassphraseScript = createDeletePersonalKeyScript(currentPassphrase);
 
         System.err.println(deletePersonalPassphraseScript);
-        PROCESS_EXECUTOR.executeScript(deletePersonalPassphraseScript);
+        int exitValue = PROCESS_EXECUTOR.executeScript(deletePersonalPassphraseScript);
 
-        //PROCESS_EXECUTOR.executeScript(deletePersonalPassphraseScript);
+        return exitValue;
     }
 
     /**
@@ -112,24 +112,14 @@ public class SecuritySettingsModel {
      * @param newPassphrase
      * @throws java.io.IOException
      */
-    public void executeChangePersonalPassphraseScript(String currentPassphrase, String newPassphrase) throws IOException {
+    public int executeChangePersonalPassphraseScript(String currentPassphrase, String newPassphrase) throws IOException {
         System.err.println("i am before");
 
         String changePassphraseScript = createChangeKeyScript(currentPassphrase, newPassphrase);
 
-        PROCESS_EXECUTOR.executeScript(changePassphraseScript);
-        
-       // executeScript("src/main/java/ch/fhnw/lernstickwelcome/model/testFile.sh");
- 
-        
-        System.err.println("i am after");
-        /*
-        if(exitValue != 0){
-            System.err.println("*******************************nicht gegangen!!");
-        } else {
-            System.err.println("es ist gegangen exitValue "+ exitValue);
-        }
-            */
+        int exitValue = PROCESS_EXECUTOR.executeScript(changePassphraseScript);
+         
+       return exitValue;
     }
 
 

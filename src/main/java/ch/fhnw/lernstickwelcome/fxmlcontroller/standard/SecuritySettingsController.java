@@ -216,11 +216,19 @@ public class SecuritySettingsController implements Initializable {
         if (checkTheInput() == true) {
             switch (selectedMethod) {
                 case "NO_PASSWORD":
-                    securitySettingsModel.executeDeletePersonalPassphraseScript(currentPassphraseString);
+                    if (securitySettingsModel.executeDeletePersonalPassphraseScript(currentPassphraseString) != 0 ) {
+                        infoBox("Sorry, the current password doesn't match, please try again", "Current Passphrase doesn't match");
+                    }
+                    
+               
                     break;
 
                 case "EDIT_PERSONAL_PASSWORD":
-                    securitySettingsModel.executeChangePersonalPassphraseScript(currentPassphraseString, passphraseString);
+                   
+                    if (securitySettingsModel.executeChangePersonalPassphraseScript(currentPassphraseString, passphraseString) != 0 ) {
+                      infoBox("Sorry, the current password doesn't match, please try again", "Current Passphrase doesn't match");
+                    }
+             
                     break;
 
                 default:
@@ -243,11 +251,12 @@ public class SecuritySettingsController implements Initializable {
                     || passPhraseFieldRepeat.getText().isEmpty()) {
                 infoBox("Please enter the missing Passphrase(s)", "Passphrase(s) missing");
                 return false;
-            } else {
-                if (passPhraseField.getText() != passPhraseFieldRepeat.getText()) {
+            } 
+            else {
+                if (!passPhraseField.getText().equals(passPhraseFieldRepeat.getText())) {
                     infoBox("The entered new Passphrases don't match", "Passphrases don't match");
                     return false;
-                } else if (passPhraseField.getText() == passPhraseFieldRepeat.getText()) {
+                } else if (passPhraseField.getText().equals(passPhraseFieldRepeat.getText())) {
                     if (passPhraseField.getText().contains("\\") || passPhraseFieldRepeat.getText().contains("\\")) {
                         infoBox("Please dont use the Backslash in your passphrase", "Backslash not allowed");
                         return false;
