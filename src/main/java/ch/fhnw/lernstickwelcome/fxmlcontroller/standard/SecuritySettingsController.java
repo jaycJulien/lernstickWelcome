@@ -9,16 +9,12 @@ import ch.fhnw.lernstickwelcome.controller.WelcomeController;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import ch.fhnw.lernstickwelcome.model.SecuritySettingsModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,11 +24,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Toggle;
 import javafx.scene.layout.VBox;
-import org.freedesktop.dbus.exceptions.DBusException;
 
 /**
  *
@@ -78,26 +72,22 @@ public class SecuritySettingsController implements Initializable {
 
     @FXML
     VBox masterPassPhraseBox = new VBox();
-    
+
     @FXML
     Button masterPassphraseButton = new Button();
-    
+
     @FXML
     Label deletedMasterPassphraseLabel = new Label();
-    
-        
-        @FXML
+
+    @FXML
     Label currentPassPhraseMasterLabel = new Label();
-        
-        
+
     //adding to the ToggleGroup
     private String passphraseString = "";
     private String passphraseRepeatedString = "";
     private String currentPassphraseString = "";
     private String passWordFieldMasterString = "";
-    
-    
-    
+
     String globallyKnownPassword = "default";
     String textInBetween = "";
     public WelcomeController controller;
@@ -123,7 +113,6 @@ public class SecuritySettingsController implements Initializable {
         //set spacing between the VBOX elements
         personalPassPhraseBox.setSpacing(10);
         masterPassPhraseBox.setSpacing(10);
-        //getCredentials();
         addValueChangedListeners();
 
         passPhraseField.setVisible(false);
@@ -133,8 +122,7 @@ public class SecuritySettingsController implements Initializable {
         currentPassLabel.setVisible(false);
         newPassLabel.setVisible(false);
         newPassLabelRepeat.setVisible(false);
-        
-        
+
         try {
             checkIfMasterExist();
         } catch (IOException ex) {
@@ -142,26 +130,22 @@ public class SecuritySettingsController implements Initializable {
         } catch (InterruptedException ex) {
             Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
         }
-            if("DISABLED".equals(textInBetween)){
+        if ("DISABLED".equals(textInBetween)) {
             masterPassphraseButton.setVisible(false);
-            
-                    currentPassPhraseMasterLabel.setVisible(false);
-                    deletedMasterPassphraseLabel.setVisible(true);
-                    passWordFieldMaster.setVisible(false);
-            System.err.println("it is disabled");
-                    
+
+            currentPassPhraseMasterLabel.setVisible(false);
+            deletedMasterPassphraseLabel.setVisible(true);
+            passWordFieldMaster.setVisible(false);
+
+        } else if (!"DISABLED".equals(textInBetween)) {
+            masterPassphraseButton.setVisible(true);
+
+            currentPassPhraseMasterLabel.setVisible(true);
+            deletedMasterPassphraseLabel.setVisible(false);
+            passWordFieldMaster.setVisible(true);
+
         }
-            else if(!"DISABLED".equals(textInBetween)){
-           masterPassphraseButton.setVisible(true);
-            
-                    currentPassPhraseMasterLabel.setVisible(true);
-                    deletedMasterPassphraseLabel.setVisible(false);
-                    passWordFieldMaster.setVisible(true);
-            System.err.println("the text is "+textInBetween);
-                    
-        }
-        
-        
+
     }
 
     public void getCredentials() {
@@ -170,57 +154,50 @@ public class SecuritySettingsController implements Initializable {
             passphraseString = passPhraseField.getText();
             passphraseRepeatedString = passPhraseFieldRepeat.getText();
             currentPassphraseString = currentPassphraseField.getText();
+        } else if (noPassPhraseRadio.isSelected()) {
+            currentPassphraseString = currentPassphraseField.getText();
+
         }
     }
-    
-    public void checkIfMasterExist() throws IOException, InterruptedException{
-        
 
-		Process p;
-                                        String fullOutput = "";
+    public void checkIfMasterExist() throws IOException, InterruptedException {
 
-		try {
-			p = Runtime.getRuntime().exec("sudo cryptsetup luksDump /dev/sdb3");
-			p.waitFor();
-			BufferedReader reader = 
-                            new BufferedReader(new InputStreamReader(p.getInputStream()));
+        Process p;
+        String fullOutput = "";
 
-                        String line = "";			
-			while ((line = reader.readLine())!= null) {
-                            fullOutput= fullOutput+line;			}
+        try {
+            p = Runtime.getRuntime().exec("sudo cryptsetup luksDump /dev/sdb3");
+            p.waitFor();
+            BufferedReader reader
+                    = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-                
-                System.err.println("full output is "+fullOutput);
-                
-                String regexString = Pattern.quote("1: ") + "(.*?)" + Pattern.quote("Key");
-                Pattern pattern = Pattern.compile(regexString);
-                // text contains the full text that you want to extract data
-                Matcher matcher = pattern.matcher(fullOutput);
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                fullOutput = fullOutput + line;
+            }
 
-                while (matcher.find()) {
-                   textInBetween = matcher.group(1); // Since (.*?) is capturing group 1
-                  // You can insert match into a List/Collection here
-                    //System.err.println("the result is "+textInBetween);
-                }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
-	}
-        
+        String regexString = Pattern.quote("1: ") + "(.*?)" + Pattern.quote("Key");
+        Pattern pattern = Pattern.compile(regexString);
+        // text contains the full text that you want to extract data
+        Matcher matcher = pattern.matcher(fullOutput);
+
+        while (matcher.find()) {
+            textInBetween = matcher.group(1);
+        }
+
+    }
 
     public void deleteMasterPassPhraseOnClick() throws IOException, InterruptedException {
-        System.out.println("Hello delete");
         // check if currentPassphrase is default or personal PassPhrase
         passWordFieldMasterString = passWordFieldMaster.getText();
 
         securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterString);
 
-        //check if the currentPassPhrase input field is empty, 
-        //if itrs empty the use default
-        //if its with something inside, its 
-        //trigger the Method to delete the masterPassphrase
     }
 
     public void addValueChangedListeners() {
@@ -234,16 +211,13 @@ public class SecuritySettingsController implements Initializable {
                         passPhraseField.setVisible(true);
                         passPhraseFieldRepeat.setVisible(true);
                         currentPassphraseField.setVisible(true);
-                        
+
                         //set the input pass fields to true
                         currentPassLabel.setVisible(true);
                         newPassLabel.setVisible(true);
                         newPassLabelRepeat.setVisible(true);
                         /*try {
                    
-                        passphraseString = passPhraseField.getText();
-                        passphraseRepeatedString = passPhraseFieldRepeat.getText();
-                        currentPassphraseString = currentPassphraseField.getText(); 
                         //securitySettingsModel.executeChangePersonalPassphraseScript(currentPassphraseString,passphraseString);
                  } catch (IOException ex) {
                      Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
@@ -252,15 +226,13 @@ public class SecuritySettingsController implements Initializable {
                         passPhraseField.setVisible(false);
                         passPhraseFieldRepeat.setVisible(false);
                         currentPassphraseField.setVisible(false);
-                        
-                   
+
                         currentPassLabel.setVisible(false);
                         newPassLabel.setVisible(false);
                         newPassLabelRepeat.setVisible(false);
 
                         /*try {
                     
-                     currentPassphraseString = currentPassphraseField.getText(); 
                     // securitySettingsModel.executeDeletePersonalPassphraseScript(currentPassphraseString);
                  } catch (IOException ex) {
                      Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);

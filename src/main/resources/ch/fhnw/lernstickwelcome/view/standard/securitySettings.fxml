@@ -26,10 +26,10 @@
             <PasswordField fx:id="passPhraseFieldRepeat" promptText="Repeated new Passphrase" />
          </children>
       </VBox>
-      <VBox fx:id="masterPassPhraseBox" layoutX="309.0" layoutY="53.0" prefHeight="200.0" prefWidth="268.0">
+      <VBox fx:id="masterPassPhraseBox" layoutX="361.0" layoutY="53.0" prefHeight="200.0" prefWidth="216.0">
          <children>
             <Label fx:id="masterPassPhraseLabel" text="Master Passphrase" />
-            <Label fx:id="deletedMasterPassPhraseLabel" prefHeight="23.0" prefWidth="271.0" text="The Master PassPhrase has been deleted" />
+            <Label fx:id="deletedMasterPassPhraseLabel" prefHeight="23.0" prefWidth="271.0" text="No Master Passphrase" />
             <Button fx:id="masterPassphraseButton" minHeight="-Infinity" mnemonicParsing="false" onAction="#deleteMasterPassPhraseOnClick" text="Delete Master Passphrase" />
             <Label fx:id="currentPassPhraseMasterLabel" text="Current Passhprase" />
             <PasswordField fx:id="passWordFieldMaster" promptText="current Passphrase" />
