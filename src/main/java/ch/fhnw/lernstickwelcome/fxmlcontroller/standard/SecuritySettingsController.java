@@ -91,10 +91,13 @@ public class SecuritySettingsController implements Initializable {
         
         
     //adding to the ToggleGroup
-    public String passphraseString = "";
-    public String passphraseRepeatedString = "";
-    public String currentPassphraseString = "";
-    public String passWordFieldMasterString = "";
+    private String passphraseString = "";
+    private String passphraseRepeatedString = "";
+    private String currentPassphraseString = "";
+    private String passWordFieldMasterString = "";
+    
+    
+    
     String globallyKnownPassword = "default";
     String textInBetween = "";
     public WelcomeController controller;
