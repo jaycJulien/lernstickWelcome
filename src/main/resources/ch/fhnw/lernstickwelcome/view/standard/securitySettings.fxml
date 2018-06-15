@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.fhnw.lernstickwelcome.fxmlcontroller.standard.SecuritySettingsController">
    <children>
@@ -20,7 +21,7 @@
             <RadioButton id="setPassphrase" fx:id="yesPassPhraseRadio" alignment="TOP_LEFT" mnemonicParsing="false" text="Set Passphrase" toggleGroup="$personalPassPhrasesGroup" />
             <Label fx:id="currentPassLabel" text="Current Passphrase" />
             <PasswordField id="current" fx:id="currentPassphraseField" promptText="Current Passphrase" />
-            <Label fx:id="hintPersonal" prefHeight="16.0" prefWidth="200.0" />
+            <Label fx:id="hintPersonal" prefHeight="37.0" prefWidth="200.0" text="Enter default if you do not have personal passphrase" wrapText="true" />
             <Label fx:id="newPassLabel" text=" New Passphrase" />
             <PasswordField fx:id="passPhraseField" promptText="New Passphrase" />
             <Label fx:id="newPassLabelRepeat" text="Repeat New Passphrase" />
@@ -30,11 +31,14 @@
       <VBox fx:id="masterPassPhraseBox" layoutX="297.0" layoutY="53.0" prefHeight="200.0" prefWidth="253.0">
          <children>
             <Label fx:id="masterPassPhraseLabel" text="Master Passphrase" />
-            <Label fx:id="deletedMasterPassPhraseLabel" prefHeight="23.0" prefWidth="271.0" text="No Master Passphrase" />
+            <Label fx:id="deletedMasterPassPhraseLabel" prefHeight="23.0" prefWidth="271.0" text="No Master Passphrase">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></Label>
             <Button fx:id="masterPassphraseButton" minHeight="-Infinity" mnemonicParsing="false" onAction="#deleteMasterPassPhraseOnClick" text="Delete Master Passphrase" />
             <Label fx:id="currentPassPhraseMasterLabel" text="Current Passhprase" />
             <PasswordField fx:id="passWordFieldMaster" promptText="current Passphrase" />
-            <Label fx:id="hintMaster" prefHeight="22.0" prefWidth="253.0" />
+            <Label fx:id="hintMaster" prefHeight="38.0" prefWidth="253.0" text="Enter default if you do not have personal passphrase" wrapText="true" />
          </children>
       </VBox>
    </children>

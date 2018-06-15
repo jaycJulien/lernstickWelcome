@@ -18,17 +18,25 @@ import ch.fhnw.lernstickwelcome.model.SecuritySettingsModel;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Toggle;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  *
@@ -59,12 +67,12 @@ public class SecuritySettingsController implements Initializable {
 
     @FXML
     private Label newPassLabelRepeat = new Label();
-    
+
     @FXML
-    private Label hintPersonal = new Label("Enter default if you do not have personal passphrase");
-    
+    private Label hintPersonal = new Label();
+
     @FXML
-    private Label hintMaster = new Label("Enter default if you do not have personal passphrase");
+    private Label hintMaster = new Label();
 
     @FXML
     private PasswordField passPhraseFieldRepeat = new PasswordField();
@@ -101,6 +109,17 @@ public class SecuritySettingsController implements Initializable {
     public WelcomeController controller;
 
     private String selectedMethod = "";
+    
+    Alert alertDeleteMaster = new Alert(AlertType.CONFIRMATION);
+    Alert alertDeletePersonal = new Alert(AlertType.CONFIRMATION);
+    
+    ButtonType continueMasterButtonType = new ButtonType("Continue");
+    ButtonType cancleMasterButtonType = new ButtonType("Cancle");
+    ButtonType continuePersonalButtonType = new ButtonType("Continue");
+    ButtonType canclePersonalButtonType = new ButtonType("Cancle");
+
+    
+        
 
     private enum SELECTED_TOGGLE {
         NO_PASSWORD,
@@ -137,13 +156,9 @@ public class SecuritySettingsController implements Initializable {
         currentPassLabel.setVisible(false);
         newPassLabel.setVisible(false);
         newPassLabelRepeat.setVisible(false);
-        
-        hintPersonal.setVisible(false);
-        
-        hintMaster.setText("Enter default if you do not have personal passphrase");
-        hintPersonal.setText("Enter default if you do not have personal passphrase");
 
-        
+        hintPersonal.setVisible(false);
+
         hintPersonal.setWrapText(true);
         hintMaster.setWrapText(true);
 
@@ -160,6 +175,7 @@ public class SecuritySettingsController implements Initializable {
             currentPassPhraseMasterLabel.setVisible(false);
             deletedMasterPassphraseLabel.setVisible(true);
             passWordFieldMaster.setVisible(false);
+            hintMaster.setVisible(false);
 
         } else if (!"DISABLED".equals(textInBetween)) {
             masterPassphraseButton.setVisible(true);
@@ -167,9 +183,22 @@ public class SecuritySettingsController implements Initializable {
             currentPassPhraseMasterLabel.setVisible(true);
             deletedMasterPassphraseLabel.setVisible(false);
             passWordFieldMaster.setVisible(true);
+            hintMaster.setVisible(true);
 
         }
+        
+        alertDeleteMaster.setTitle("Confirmation Dialog");
+        //alertDeleteMaster.setHeaderText("Look, a Confirmation Dialog");
+        alertDeleteMaster.setContentText("Master user will not be able to access");
+        
+        alertDeletePersonal.setTitle("Confirmation Dialog");
+        //alertDeletePersonal.setHeaderText("Look, a Confirmation Dialog");
+        alertDeletePersonal.setContentText("No Password will be asked to login");
+        
+        alertDeleteMaster.getButtonTypes().setAll(continueMasterButtonType,cancleMasterButtonType);
+        alertDeletePersonal.getButtonTypes().setAll(continuePersonalButtonType,canclePersonalButtonType);
 
+        
     }
 
     public void getCredentials() {
@@ -217,42 +246,50 @@ public class SecuritySettingsController implements Initializable {
 
     public void deleteMasterPassPhraseOnClick() throws IOException, InterruptedException {
         // check if currentPassphrase is default or personal PassPhrase
-        passWordFieldMasterString = passWordFieldMaster.getText();
-securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterString);
-        //if (securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterString) != 0) {
-          //  System.err.println("The Exit value of delete is "+ );
-            //infoBox("Sorry, the password you entered is not correct, please try again.", "Passphrase is not correct");
-        //}
-
+        
+        Optional<ButtonType> result = alertDeleteMaster.showAndWait();
+            if (result.get() == continueMasterButtonType){
+                passWordFieldMasterString = passWordFieldMaster.getText();
+                securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterString);
+            } else {
+                // ... user chose CANCEL or closed the dialog
+            }
+        
+       
     }
 
     public void doActionOnSave() throws IOException {
 
-        getCredentials();
-        //checkTheInput();
+        Optional<ButtonType> result = alertDeletePersonal.showAndWait();
+            if (result.get() == continuePersonalButtonType){
+                getCredentials();
 
         if (checkTheInput() == true) {
             switch (selectedMethod) {
                 case "NO_PASSWORD":
-                    if (securitySettingsModel.executeDeletePersonalPassphraseScript(currentPassphraseString) != 0 ) {
+
+                    if (securitySettingsModel.executeDeletePersonalPassphraseScript(currentPassphraseString) != 0) {
                         infoBox("Sorry, the current password doesn't match, please try again", "Current Passphrase doesn't match");
                     }
-                    
-               
+
                     break;
 
                 case "EDIT_PERSONAL_PASSWORD":
-                   
-                    if (securitySettingsModel.executeChangePersonalPassphraseScript(currentPassphraseString, passphraseString) != 0 ) {
-                      infoBox("Sorry, the current password doesn't match, please try again", "Current Passphrase doesn't match");
+
+                    if (securitySettingsModel.executeChangePersonalPassphraseScript(currentPassphraseString, passphraseString) != 0) {
+                        infoBox("Sorry, the current password doesn't match, please try again", "Current Passphrase doesn't match");
                     }
-             
+
                     break;
 
                 default:
                     throw new IllegalArgumentException("the option selected does not exist");
             }
         }
+            } else {
+                // ... user chose CANCEL or closed the dialog
+            }
+        
     }
 
     public boolean checkTheInput() {
@@ -269,8 +306,7 @@ securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterStr
                     || passPhraseFieldRepeat.getText().isEmpty()) {
                 infoBox("Please enter the missing Passphrase(s)", "Passphrase(s) missing");
                 return false;
-            } 
-            else {
+            } else {
                 if (!passPhraseField.getText().equals(passPhraseFieldRepeat.getText())) {
                     infoBox("The entered new Passphrases don't match", "Passphrases don't match");
                     return false;
@@ -303,7 +339,6 @@ securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterStr
                         currentPassphraseField.setVisible(true);
                         hintPersonal.setVisible(true);
 
-
                         //set the input pass fields to true
                         currentPassLabel.setVisible(true);
                         newPassLabel.setVisible(true);
@@ -319,8 +354,7 @@ securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterStr
                         currentPassLabel.setVisible(true);
                         newPassLabel.setVisible(false);
                         newPassLabelRepeat.setVisible(false);
-                                    hintPersonal.setVisible(false);
-
+                        hintPersonal.setVisible(false);
 
                     }
 
