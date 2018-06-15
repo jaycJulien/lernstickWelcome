@@ -16,6 +16,7 @@
  */
 package ch.fhnw.lernstickwelcome.controller.binder;
 
+import ch.fhnw.lernstickwelcome.controller.WelcomeApplication;
 import ch.fhnw.lernstickwelcome.controller.WelcomeController;
 import ch.fhnw.lernstickwelcome.fxmlcontroller.MainController;
 import javafx.scene.Node;
@@ -53,15 +54,23 @@ public class MainBinder {
      */
     public void initHandlers(Stage progressDialog) {
         welcomeApplicationStart.getBtSaveButton().setOnAction(evt -> {
+            
+            System.err.println("the curent View Indexplease"+MainController.currentViewIndex); 
+            if(MainController.currentViewIndex != 3) {
+                        
+            controller.startProcessingTasks();
+            progressDialog.showAndWait();    
+                
+            } else if (MainController.currentViewIndex == 3) {
+                
+            }
             //get the status if its no pw, edit personal or delete mpw
             //switch case blubber
             //securitycontroller::getClass.getStatus
                  //   switch case(status)
                     //        case : "NO_PW+"
             //execute this shit
-            
-            controller.startProcessingTasks();
-            progressDialog.showAndWait();
+
         });
         welcomeApplicationStart.getBtFinishButton().setOnAction(evt -> {
             Stage s =((Stage) ((Node) evt.getSource()).getScene().getWindow());

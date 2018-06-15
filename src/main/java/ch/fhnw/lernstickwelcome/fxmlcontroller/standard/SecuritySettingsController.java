@@ -5,6 +5,7 @@
  */
 package ch.fhnw.lernstickwelcome.fxmlcontroller.standard;
 
+import ch.fhnw.lernstickwelcome.controller.WelcomeController;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -96,6 +97,7 @@ public class SecuritySettingsController implements Initializable {
     public String passWordFieldMasterString = "";
     String globallyKnownPassword = "default";
     String textInBetween = "";
+    public WelcomeController controller;
 
     /**
      * Initializes the controller class.
