@@ -64,6 +64,7 @@ public final class WelcomeApplication extends Application {
     private WelcomeController controller;
     private FXMLGuiLoader guiLoader;
     private Stage passwordChangeStage;
+    
 
     /**
      * Initializes the stage.
@@ -87,9 +88,14 @@ public final class WelcomeApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
-            controller = new WelcomeController();
 
+                              
+            controller = new WelcomeController();
+            
+       
             guiLoader = new FXMLGuiLoader(isExamEnvironment(), controller.getBundle());
+
+            controller.setGuiLoaderInstance(guiLoader);
 
             Stage errorStage = FXMLGuiLoader.createDialog(
                     primaryStage,

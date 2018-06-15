@@ -29,6 +29,7 @@ import ch.fhnw.lernstickwelcome.model.firewall.FirewallTask;
 import ch.fhnw.lernstickwelcome.model.help.HelpLoader;
 import ch.fhnw.lernstickwelcome.model.partition.PartitionTask;
 import ch.fhnw.lernstickwelcome.model.systemconfig.SystemconfigTask;
+import ch.fhnw.lernstickwelcome.util.FXMLGuiLoader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,11 +74,19 @@ public class WelcomeController {
     private HelpLoader help;
 
     private boolean isExamEnvironment;
-
+    
+    private FXMLGuiLoader guiLoaderInstance;
+    
+   
+    
+   
     /**
      * Loads the data for the Exam Env.
      */
     public void loadExamEnvironment() {
+        
+      
+        
         configureLogger();
 
         isExamEnvironment = true;
@@ -251,4 +260,13 @@ public class WelcomeController {
         return properties;
     }
 
+    public FXMLGuiLoader getGuiLoaderInstance() {
+        return guiLoaderInstance;
+    }
+
+    public void setGuiLoaderInstance(FXMLGuiLoader guiLoaderInstance) {
+        this.guiLoaderInstance = guiLoaderInstance;
+    }
+
+    
 }

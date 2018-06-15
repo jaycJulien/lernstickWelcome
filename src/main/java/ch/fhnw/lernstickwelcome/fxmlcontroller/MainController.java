@@ -45,6 +45,8 @@ public class MainController implements Initializable {
     private ListView<MenuPaneItem> lvMenuPane;
     @FXML
     private ScrollPane spMainPane;
+    
+    public static int currentViewIndex;
 
     public void initializeMenu(ObservableList<MenuPaneItem> list) {
         lvMenuPane.setCellFactory(lv -> new MenuListCell());
@@ -55,6 +57,9 @@ public class MainController implements Initializable {
         lvMenuPane.getSelectionModel().selectedItemProperty().addListener(cl -> {
             spMainPane.setContent(lvMenuPane.getSelectionModel().getSelectedItem().getParentScene());
             spMainPane.setVvalue(0);
+           
+            //get the current index of the selected vie
+            currentViewIndex = lvMenuPane.getSelectionModel().getSelectedIndex();
             ((Region) (spMainPane.getContent())).setPrefWidth(spMainPane.getWidth());
             ((Region) (spMainPane.getContent())).setPrefHeight(spMainPane.getHeight());
         });
