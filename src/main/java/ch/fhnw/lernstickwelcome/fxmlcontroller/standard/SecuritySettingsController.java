@@ -104,23 +104,26 @@ public class SecuritySettingsController implements Initializable {
     private String currentPassphraseString = "";
     private String passWordFieldMasterString = "";
 
-    String globallyKnownPassword = "default";
+    //temporary holder to get the state of keyslot 1
     String textInBetween = "";
+
     public WelcomeController controller;
 
+    //the selected method for the personal passphrase
     private String selectedMethod = "";
-    
+
+    //the two alerts to show in case the personal passphrase will be deleted
+    //or the Master passphrase will be deleted
     Alert alertDeleteMaster = new Alert(AlertType.CONFIRMATION);
     Alert alertDeletePersonal = new Alert(AlertType.CONFIRMATION);
-    
+
+    //the options keys avalible in each alert
     ButtonType continueMasterButtonType = new ButtonType("Continue");
     ButtonType cancleMasterButtonType = new ButtonType("Cancle");
     ButtonType continuePersonalButtonType = new ButtonType("Continue");
     ButtonType canclePersonalButtonType = new ButtonType("Cancle");
 
-    
-        
-
+    //the allowed states for the personal passphrase
     private enum SELECTED_TOGGLE {
         NO_PASSWORD,
         EDIT_PERSONAL_PASSWORD;
@@ -132,13 +135,7 @@ public class SecuritySettingsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        try {
-            checkIfMasterExist();
-        } catch (IOException ex) {
-            Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //adding the ToggleButtons to the group to just select one
         noPassPhraseRadio.setToggleGroup(personalPassphrasesGroup);
         yesPassPhraseRadio.setToggleGroup(personalPassphrasesGroup);
         noPassPhraseRadio.setUserData("noPassphrase");
@@ -149,26 +146,30 @@ public class SecuritySettingsController implements Initializable {
         masterPassPhraseBox.setSpacing(10);
         addValueChangedListeners();
 
+        //hide all the input passphrases at the begging as no method is selected
+        //for the personal passphrase
         passPhraseField.setVisible(false);
         passPhraseFieldRepeat.setVisible(false);
         currentPassphraseField.setVisible(false);
-
         currentPassLabel.setVisible(false);
         newPassLabel.setVisible(false);
         newPassLabelRepeat.setVisible(false);
-
         hintPersonal.setVisible(false);
 
         hintPersonal.setWrapText(true);
         hintMaster.setWrapText(true);
 
         try {
+            //to determine whether or not to show delete master passphrase button
             checkIfMasterExist();
         } catch (IOException ex) {
             Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
             Logger.getLogger(SecuritySettingsController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        //if the keyslot 1 is DISABLED, that means no password is stored, so 
+        //the delete master passhrase button will not be visible
         if ("DISABLED".equals(textInBetween)) {
             masterPassphraseButton.setVisible(false);
 
@@ -177,6 +178,7 @@ public class SecuritySettingsController implements Initializable {
             passWordFieldMaster.setVisible(false);
             hintMaster.setVisible(false);
 
+            //if there is a value in keyslot 1, then show the delete master passphrase button
         } else if (!"DISABLED".equals(textInBetween)) {
             masterPassphraseButton.setVisible(true);
 
@@ -186,23 +188,22 @@ public class SecuritySettingsController implements Initializable {
             hintMaster.setVisible(true);
 
         }
-        
-        alertDeleteMaster.setTitle("Confirmation Dialog");
-        //alertDeleteMaster.setHeaderText("Look, a Confirmation Dialog");
-        alertDeleteMaster.setContentText("Master user will not be able to access");
-        
-        alertDeletePersonal.setTitle("Confirmation Dialog");
-        //alertDeletePersonal.setHeaderText("Look, a Confirmation Dialog");
-        alertDeletePersonal.setContentText("No Password will be asked to login");
-        
-        alertDeleteMaster.getButtonTypes().setAll(continueMasterButtonType,cancleMasterButtonType);
-        alertDeletePersonal.getButtonTypes().setAll(continuePersonalButtonType,canclePersonalButtonType);
 
-        
+        //inserting the text to the alerts to be shown
+        alertDeleteMaster.setTitle("Confirmation Dialog");
+        alertDeleteMaster.setContentText("Master user will not be able to access");
+
+        alertDeletePersonal.setTitle("Confirmation Dialog");
+        alertDeletePersonal.setContentText("No Password will be asked to login");
+
+        alertDeleteMaster.getButtonTypes().setAll(continueMasterButtonType, cancleMasterButtonType);
+        alertDeletePersonal.getButtonTypes().setAll(continuePersonalButtonType, canclePersonalButtonType);
+
     }
 
+    //this methods populates the variables with the inserted text, based on the 
+    //selected method of the personal passphrase.
     public void getCredentials() {
-
         if (yesPassPhraseRadio.isSelected()) {
             passphraseString = passPhraseField.getText();
             passphraseRepeatedString = passPhraseFieldRepeat.getText();
@@ -213,8 +214,8 @@ public class SecuritySettingsController implements Initializable {
         }
     }
 
+    //this methods checks if Keyskot 1 is ENABLED or DISABLED
     public void checkIfMasterExist() throws IOException, InterruptedException {
-
         Process p;
         String fullOutput = "";
 
@@ -235,7 +236,6 @@ public class SecuritySettingsController implements Initializable {
 
         String regexString = Pattern.quote("1: ") + "(.*?)" + Pattern.quote("Key");
         Pattern pattern = Pattern.compile(regexString);
-        // text contains the full text that you want to extract data
         Matcher matcher = pattern.matcher(fullOutput);
 
         while (matcher.find()) {
@@ -244,54 +244,60 @@ public class SecuritySettingsController implements Initializable {
 
     }
 
+    //this method is the action method of the delte master passphrase.
     public void deleteMasterPassPhraseOnClick() throws IOException, InterruptedException {
-        // check if currentPassphrase is default or personal PassPhrase
-        
         Optional<ButtonType> result = alertDeleteMaster.showAndWait();
-            if (result.get() == continueMasterButtonType){
-                passWordFieldMasterString = passWordFieldMaster.getText();
-                securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterString);
-            } else {
-                // ... user chose CANCEL or closed the dialog
-            }
-        
-       
+        if (result.get() == continueMasterButtonType) {
+            passWordFieldMasterString = passWordFieldMaster.getText();
+            securitySettingsModel.executeDeleteMasterPassphraseScript(passWordFieldMasterString);
+        } else {
+            // ... user chose CANCEL or closed the dialog
+        }
+
     }
 
+    //this method is triggered when the SAVE button is clicked, it checks then 
+    //which selected method for the personal passphrase is chosen, then do the 
+    //corresponding steps whether to to replace the personal passphrase with "default"
+    //passphrase or change the passphrase to the entered new passphrase
     public void doActionOnSave() throws IOException {
 
+        //show the alert message and only continue if the user clicks on continue
         Optional<ButtonType> result = alertDeletePersonal.showAndWait();
-            if (result.get() == continuePersonalButtonType){
-                getCredentials();
+        if (result.get() == continuePersonalButtonType) {
+            getCredentials();
 
-        if (checkTheInput() == true) {
-            switch (selectedMethod) {
-                case "NO_PASSWORD":
+            if (checkTheInput() == true) {
+                switch (selectedMethod) {
+                    case "NO_PASSWORD":
 
-                    if (securitySettingsModel.executeDeletePersonalPassphraseScript(currentPassphraseString) != 0) {
-                        infoBox("Sorry, the current password doesn't match, please try again", "Current Passphrase doesn't match");
-                    }
+                        if (securitySettingsModel.executeDeletePersonalPassphraseScript(currentPassphraseString) != 0) {
+                            infoBox("Sorry, the current password doesn't match, please try again", "Current Passphrase doesn't match");
+                        }
 
-                    break;
+                        break;
 
-                case "EDIT_PERSONAL_PASSWORD":
+                    case "EDIT_PERSONAL_PASSWORD":
 
-                    if (securitySettingsModel.executeChangePersonalPassphraseScript(currentPassphraseString, passphraseString) != 0) {
-                        infoBox("Sorry, the current password doesn't match, please try again", "Current Passphrase doesn't match");
-                    }
+                        if (securitySettingsModel.executeChangePersonalPassphraseScript(currentPassphraseString, passphraseString) != 0) {
+                            infoBox("Sorry, the current password doesn't match, please try again", "Current Passphrase doesn't match");
+                        }
 
-                    break;
+                        break;
 
-                default:
-                    throw new IllegalArgumentException("the option selected does not exist");
+                    default:
+                        throw new IllegalArgumentException("the option selected does not exist");
+                }
             }
+        } else {
+            // ... user chose CANCEL or closed the dialog
         }
-            } else {
-                // ... user chose CANCEL or closed the dialog
-            }
-        
+
     }
 
+    //this method do all the checks regrading the user input, it checks if the 
+    //input and repeatition dont match, or if the input is left input, also the 
+    // backslash sign is not allowed
     public boolean checkTheInput() {
         if (noPassPhraseRadio.isSelected()) {
             if (currentPassphraseField.getText().isEmpty()) {
@@ -325,6 +331,8 @@ public class SecuritySettingsController implements Initializable {
         return false;
     }
 
+    //this method is responsible of monitoring the selected toggle to view the 
+    //corresponding text fields. 
     public void addValueChangedListeners() {
 
         personalPassphrasesGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
@@ -407,6 +415,10 @@ public class SecuritySettingsController implements Initializable {
         this.selectedMethod = selectedMethod;
     }
 
+    //those two infoboxes are the one that would pop-up if the checkTheInput method
+    //fails, or if the exitValue of one of the commands regarding the personal password fails
+    //because the exitValue is not zero, which means for example that the current password entered 
+    //is not correct
     public static void infoBox(String infoMessage, String titleBar) {
         /* By specifying a null headerMessage String, we cause the dialog to
            not have a header */
