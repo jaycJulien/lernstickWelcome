@@ -63,6 +63,17 @@ public class MainBinder {
                 
             } else if (MainController.currentViewIndex == 3) {
                 String selectedMethod = controller.getGuiLoaderInstance().getSecuritySettingsController().getSelectedMethod();
+                
+                switch(selectedMethod) {
+                    case "NO_PASSWORD":
+                        System.err.println("blubber");
+                        break;
+                    case "EDIT_PERSONAL_PASSWORD":
+                        System.err.println("blubber2");
+                        break;
+                        default:
+                            throw new IllegalArgumentException("the option selected does not exist");
+                }
                 System.err.println("+++++++selectedMehtod"+ selectedMethod);
             }
             //get the status if its no pw, edit personal or delete mpw
