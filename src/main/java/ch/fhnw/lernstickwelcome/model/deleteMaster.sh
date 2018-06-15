@@ -1,8 +1,9 @@
 #!/bin/bash
 export HISTIGNORE="expect*";
 passwd=$1
+partitionName=$2
 expect -c "
-        spawn sudo cryptsetup luksKillSlot /dev/sdb3 1
+        spawn sudo cryptsetup luksKillSlot /dev/$partitionName 1
         expect "?assphrase:"
         send \"$passwd\r\"
         expect eof"

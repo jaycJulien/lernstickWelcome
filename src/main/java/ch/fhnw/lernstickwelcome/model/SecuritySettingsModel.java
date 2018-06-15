@@ -21,7 +21,7 @@ import sun.tools.jar.CommandLine;
 
 /**
  *
- * @author user
+ * @author Waleed Al-Hubaishi, Julien Christen
  */
 public class SecuritySettingsModel {
 
@@ -38,7 +38,6 @@ public class SecuritySettingsModel {
     /**
      * this method gets the partition name and location
      *
-     * @return
      * @throws org.freedesktop.dbus.exceptions.DBusException
      */
     public static void getPartitionName() throws DBusException {
@@ -63,30 +62,27 @@ public class SecuritySettingsModel {
     }
 
     /**
-     * This method deletes the Master passphrase
+     * This method deletes the Master passphrase, it uses the deleteMaster.sh
+     * which is implemented using the expect. Keyslot 1 will be empty and
+     * ENABLED
      *
+     * @param currentPassphrase
      * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
      */
+    public void executeDeleteMasterPassphraseScript(String currentPassphrase) throws IOException, InterruptedException {
 
-    public void executeDeleteMasterPassphraseScript(String currentPassphrase) throws IOException, InterruptedException  {
+        //go the deleteMaster.sh file and excute the expect shell inside with the given partition name
+        ProcessBuilder pb = new ProcessBuilder("src/main/java/ch/fhnw/lernstickwelcome/model/deleteMaster.sh", currentPassphrase, partitonName);
+        Process p = pb.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
 
-        
-           String deleteMasterPassphraseScript = createDeleteMasterKeyScript();
-        //Process myProcess = Runtime.getRuntime().exec("sudo cryptsetup luksKillSlot -q /dev/sdb3  1");
-        //PROCESS_EXECUTOR.executeScript(deleteMasterPassphraseScript);
-            //Runtime.getRuntime().exec("sudo cryptsetup luksKillSlot -q /dev/sdb3  1");
-            ProcessBuilder pb = new ProcessBuilder("src/main/java/ch/fhnw/lernstickwelcome/model/testFile.sh",currentPassphrase);
-            Process p = pb.start();
-             //int exitValue = PROCESS_EXECUTOR.executeProcess("sudo", "cryptsetup","luksKillSlot","-q","/dev/sdb3","1");
-             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-             String line = null;
-             while ((line = reader.readLine()) != null)
-             {
-                System.out.println(line);
-             }        
-             System.err.println("deletemasterScript " + deleteMasterPassphraseScript);
-            
-             /*String script = "#!/bin/bash" + '\n'
+        //we tried to do it with script string, but it didnt work so that is why we have a file for this
+        /*String script = "#!/bin/bash" + '\n'
                 +"export HISTIGNORE=\"expect*\";"+ '\n'
                 +"expect -c \""+ '\n'
                 +"spawn sudo cryptsetup luksKillSlot /dev/sdb3 1"+ '\n'
@@ -103,22 +99,20 @@ public class SecuritySettingsModel {
 
              
              return exitValue;*/
-            
     }
 
     /**
      * This method deletes the personal passphrase
      *
      * @param currentPassphrase
-     * @param newPassphrase
+     * @return
      * @throws java.io.IOException
      */
     public int executeDeletePersonalPassphraseScript(String currentPassphrase) throws IOException {
 
         String deletePersonalPassphraseScript = "";
         deletePersonalPassphraseScript = createDeletePersonalKeyScript(currentPassphrase);
-
-        System.err.println(deletePersonalPassphraseScript);
+        //the exiteValue is importnant to know if the command ended successfuly
         int exitValue = PROCESS_EXECUTOR.executeScript(deletePersonalPassphraseScript);
 
         return exitValue;
@@ -129,20 +123,18 @@ public class SecuritySettingsModel {
      *
      * @param currentPassphrase
      * @param newPassphrase
+     * @return
      * @throws java.io.IOException
      */
     public int executeChangePersonalPassphraseScript(String currentPassphrase, String newPassphrase) throws IOException {
-        System.err.println("i am before");
 
         String changePassphraseScript = createChangeKeyScript(currentPassphrase, newPassphrase);
 
         int exitValue = PROCESS_EXECUTOR.executeScript(changePassphraseScript);
-         
-       return exitValue;
+
+        return exitValue;
     }
 
-
-    
     /**
      * The shell to change key
      *
@@ -152,51 +144,24 @@ public class SecuritySettingsModel {
      */
     public String createChangeKeyScript(String currentPassphrase, String newPassphrase) {
         String script = "#!/bin/sh" + '\n'
-                + "printf \"" + currentPassphrase+"\\n"+newPassphrase
-                + "\" | sudo cryptsetup luksChangeKey /dev/sdb3 -q -S 0";
-        System.err.println("script is "+script);
-               // + "\" | cryptsetup luksChangeKey /dev/" + partitonName + " -q";
-
+                + "printf \"" + currentPassphrase + "\\n" + newPassphrase
+                + "\" | sudo cryptsetup luksChangeKey /dev/" + partitonName + " -q -S 0";
         return script;
     }
 
     /**
-     * The shell to delete the personal passphrase
+     * The shell to delete the personal passphrase and set "default" instead in
+     * keyslot 0
      *
      * @param currentPassphrase
-     * @param newPassphrase
      * @return
      */
     public String createDeletePersonalKeyScript(String currentPassphrase) {
         String script = "#!/bin/sh" + '\n'
-               + "printf \"" + currentPassphrase+"\\ndefault\n"
-                + "\" | sudo cryptsetup luksChangeKey /dev/sdb3 -S 0";
-               // + "\" | cryptsetup luksChangeKey -q /dev/" + partitonName;
-
-               System.err.println("the script is "+script);
-        return script;
-    }
-
-    /**
-     * The shell to delete the master passphrase
-     *
-     * @return
-     * @throws org.freedesktop.dbus.exceptions.DBusException
-     */
-    public String createDeleteMasterKeyScript() {
-        //getPartitionName();
-        String script = "#!/bin/sh" + '\n'
-                + "sudo cryptsetup luksKillSlot -q /dev/sdb3  1";
-              //  + "cryptsetup luksKillSlot /dev/" + partitonName + " -q " + slotForMaster;
+                + "printf \"" + currentPassphrase + "\\ndefault\n"
+                + "\" | sudo cryptsetup luksChangeKey /dev/" + partitonName + " -S 0";
 
         return script;
-    }
-
-    public int checkConsoleOutput(String script) throws IOException {
-        int exitValue = PROCESS_EXECUTOR.executeScript(script);
-
-        return exitValue;
-
     }
 
 }
