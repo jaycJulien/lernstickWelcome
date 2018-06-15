@@ -62,7 +62,8 @@ public class MainBinder {
             progressDialog.showAndWait();    
                 
             } else if (MainController.currentViewIndex == 3) {
-                
+                String selectedMethod = controller.getGuiLoaderInstance().getSecuritySettingsController().getSelectedMethod();
+                System.err.println("+++++++selectedMehtod"+ selectedMethod);
             }
             //get the status if its no pw, edit personal or delete mpw
             //switch case blubber
