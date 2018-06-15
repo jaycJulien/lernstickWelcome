@@ -53,6 +53,13 @@ public class MainBinder {
      */
     public void initHandlers(Stage progressDialog) {
         welcomeApplicationStart.getBtSaveButton().setOnAction(evt -> {
+            //get the status if its no pw, edit personal or delete mpw
+            //switch case blubber
+            //securitycontroller::getClass.getStatus
+                 //   switch case(status)
+                    //        case : "NO_PW+"
+            //execute this shit
+            
             controller.startProcessingTasks();
             progressDialog.showAndWait();
         });

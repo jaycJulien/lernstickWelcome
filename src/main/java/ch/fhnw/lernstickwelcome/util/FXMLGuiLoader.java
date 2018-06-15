@@ -416,8 +416,8 @@ public final class FXMLGuiLoader {
     public AdditionalSoftwareController getAddSoftwareController() {
         return additionalSoftwareController;
     }
-    
-       /**
+
+    /**
      * Returns the Controller for this fxml view.
      *
      * @return
@@ -437,18 +437,19 @@ public final class FXMLGuiLoader {
 
     /**
      * Loads an info text dialog with a specific action.
+     *
      * @param parent the parent stage
      * @param textid the id of the text for this dialog
      * @param e the action on ok
      * @return a modal info stage
-     * @throws IOException 
+     * @throws IOException
      */
-    public Stage getInfotextdialog(Stage parent, String textid, 
+    public Stage getInfotextdialog(Stage parent, String textid,
             EventHandler<ActionEvent> e) throws IOException {
         Pair<Scene, InfodialogController> p
                 = loadScene("/ch/fhnw/lernstickwelcome/view/infodialog.fxml", stylesheet, rb);
         p.getValue().initDialog(textid, e);
-        return createDialog(parent, p.getKey(), 
+        return createDialog(parent, p.getKey(),
                 rb.getString("welcomeApplicationInfodialog.title"), true);
     }
 
